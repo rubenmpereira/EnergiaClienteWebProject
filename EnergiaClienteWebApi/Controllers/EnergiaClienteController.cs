@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using EnergiaClienteWebApi.Databases.EnergiaClienteDatabase;
+using EnergiaClienteWebApi.Databases;
 using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Handlers;
 
 [Route("[controller]/[action]")]
 public class EnergiaClienteController : ControllerBase
@@ -14,7 +15,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetReadings")]
     public ActionResult<dbResponse<Reading>> GetReadings([FromQuery] int id)
     {
-        var result = EnergiaCliente.GetReadings(new GetReadingsRequestModel() { habitation = id, quantity = 10 });
+        var result = EnergiaClienteHandler.GetReadings(new GetReadingsRequestModel() { habitation = id, quantity = 10 });
 
         if (result.Status.Error == true)
         {
@@ -30,7 +31,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpPost(Name = "CalculateInvoice")]
     public ActionResult<dbResponse<decimal>> CalculateInvoice([FromQuery] int id, [FromBody] Reading reading)
     {
-        var result = EnergiaCliente.CalculateAmountPay(id, reading);
+        var result = EnergiaClienteHandler.CalculateAmountPay(id, reading);
 
         if (result.Status.Error == true)
         {
