@@ -1,4 +1,4 @@
-namespace EnergiaClienteWebApi.Database;
+namespace EnergiaClienteWebApi.Databases.EnergiaClienteDatabase;
 
 using System.Data;
 using System.Text;

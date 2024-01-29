@@ -1,6 +1,3 @@
-using EnergiaClienteWebApi.Database;
-using EnergiaClienteWebApi.RequestModels;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,5 +20,3 @@ app.UseSwaggerUI();
 app.MapControllers();
 
 app.Run();
-
-record Product(string name, decimal cost, string code);

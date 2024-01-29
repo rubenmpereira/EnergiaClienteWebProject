@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using EnergiaClienteWebApi.Database;
+using EnergiaClienteWebApi.Databases.EnergiaClienteDatabase;
 using EnergiaClienteWebApi.RequestModels;
 
 [Route("[controller]/[action]")]
