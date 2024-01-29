@@ -41,10 +41,25 @@ public record Invoice
 
 public class dbResponse<T>
 {
+    public dbResponse()
+    {
+        this.Status = new StatusObject(false);
+    }
+    public StatusObject Status { get; set; }
+    public List<T>? Result { get; set; }
+}
+
+public class StatusObject
+{
+    public StatusObject() { }
+    public StatusObject(bool _error)
+    {
+        this.Error = _error;
+        this.StatusCode=200;
+    }
     public bool Error { get; set; }
     public int StatusCode { get; set; }
     public string? ErrorMessage { get; set; }
-    public List<T>? Result { get; set; }
 }
 
 public class EnergiaCliente
@@ -66,7 +81,7 @@ public class EnergiaCliente
         var response = RunSelectProcedure("UltimasFaturas", new SqlParameter[1] { param });
 
         if (response.Count == 0)
-            return new dbResponse<Invoice> { Error = true, ErrorMessage = "Not found", StatusCode = 404 };
+            return new dbResponse<Invoice> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
 
         //mapping
         var invoices = new List<Invoice>();
@@ -88,7 +103,7 @@ public class EnergiaCliente
         return new dbResponse<Invoice>
         {
             Result = invoices,
-            Error = false
+            Status = new StatusObject(false)
         };
     }
 
@@ -104,7 +119,7 @@ public class EnergiaCliente
         var response = RunSelectProcedure("UltimasLeituras", parameters);
 
         if (response.Count == 0)
-            return new dbResponse<Reading> { Error = true, ErrorMessage = "Not found", StatusCode = 404 };
+            return new dbResponse<Reading> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
 
         //mapping
         var readings = new List<Reading>();
@@ -127,14 +142,17 @@ public class EnergiaCliente
         return new dbResponse<Reading>
         {
             Result = readings,
-            Error = false
+            Status = new StatusObject(false)
         };
     }
 
     public static dbResponse<decimal> CalculateAmountPay(int habitation, Reading reading)
     {
-        var result = GetReadings(new GetReadingsRequestModel() { habitation = habitation, quantity = 1 }).Result;
-        var last = result != null ? result[0] : new Reading();
+        var readings = GetReadings(new GetReadingsRequestModel() { habitation = habitation, quantity = 1 });
+
+        if (readings.Result == null) return new dbResponse<decimal>() { Status = readings.Status };
+
+        var last = readings.Result[0];
 
         decimal amount = (reading.Ponta - last.Ponta) * costkwhPonta + (reading.Cheias - last.Cheias) * costkwhCheias + (reading.Vazio - last.Vazio) * costkwhVazio;
 
@@ -169,7 +187,7 @@ public class EnergiaCliente
             result = default(T);
         }
 
-        return result!=null?result:default(T);
+        return result != null ? result : default(T);
     }
 
 }

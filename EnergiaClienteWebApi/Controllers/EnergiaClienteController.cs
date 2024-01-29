@@ -14,12 +14,32 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetReadings")]
     public ActionResult<dbResponse<Reading>> GetReadings([FromQuery] int id)
     {
-        return new OkObjectResult(EnergiaCliente.GetReadings(new GetReadingsRequestModel() { habitation = id, quantity = 10 }));
+        var result = EnergiaCliente.GetReadings(new GetReadingsRequestModel() { habitation = id, quantity = 10 });
+
+        if (result.Status.Error == true)
+        {
+            if (result.Status.StatusCode == 404)
+                return new NotFoundResult();
+            else
+                return new BadRequestObjectResult(result);
+        }
+
+        return new OkObjectResult(result);
     }
 
     [HttpPost(Name = "CalculateInvoice")]
     public ActionResult<dbResponse<decimal>> CalculateInvoice([FromQuery] int id, [FromBody] Reading reading)
     {
-        return new OkObjectResult(EnergiaCliente.CalculateAmountPay(id, reading));
+        var result = EnergiaCliente.CalculateAmountPay(id, reading);
+
+        if (result.Status.Error == true)
+        {
+            if (result.Status.StatusCode == 404)
+                return new NotFoundResult();
+            else
+                return new BadRequestObjectResult(result);
+        }
+
+        return new OkObjectResult(result);
     }
 }

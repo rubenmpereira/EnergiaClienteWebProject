@@ -14,12 +14,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapGet("/ping", () => "pong");
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 
-app.MapGet("/ping", () => "pong");
-
 app.Run();
+
+record Product(string name, decimal cost, string code);
