@@ -29,9 +29,9 @@ public class EnergiaClienteController : ControllerBase
     }
 
     [HttpPost(Name = "CalculateInvoice")]
-    public ActionResult<dbResponse<decimal>> CalculateInvoice([FromQuery] int id, [FromBody] Reading reading)
+    public ActionResult<dbResponse<decimal>> CalculateInvoice([FromQuery] CalculateInvoiceRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.CalculateAmountPay(id, reading);
+        var result = EnergiaClienteHandler.CalculateAmountPay(requestModel);
 
         if (result.Status.Error == true)
         {
