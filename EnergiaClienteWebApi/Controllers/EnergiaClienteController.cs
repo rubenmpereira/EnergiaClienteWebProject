@@ -28,10 +28,53 @@ public class EnergiaClienteController : ControllerBase
         return new OkObjectResult(result);
     }
 
-    [HttpPost(Name = "CalculateInvoice")]
-    public ActionResult<dbResponse<decimal>> CalculateInvoice([FromQuery] CalculateInvoiceRequestModel requestModel)
+    [HttpPost(Name = "UploadNewReading")]
+    public ActionResult<dbResponse<decimal>> UploadNewReading([FromQuery] UploadNewReadingRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.CalculateAmountPay(requestModel);
+        var today = new DateTime();
+        int month = today.AddMonths(-1).Month;
+        int year = today.AddMonths(-1).Year;
+
+        if (today.Day < 5 || today.Day > 7) // Check if there is better way to do this
+            return new BadRequestObjectResult(new dbResponse<decimal>()
+            {
+                Status = new StatusObject()
+                {
+                    Error = true,
+                    ErrorMessage = "You can not upload a new reading in this date",
+                    StatusCode = 400
+                }
+            });
+
+        var readingResult = EnergiaClienteHandler.GetReadingByDate(new GetReadingByDateRequestModel()
+        {
+            habitation = requestModel.habitation,
+            month = month,
+            year = year
+        });
+
+        if (readingResult != null) // test this if works!
+            return new BadRequestObjectResult(new dbResponse<decimal>()
+            {
+                Status = new StatusObject()
+                {
+                    Error = true,
+                    ErrorMessage = "You already uploaded your reading this month",
+                    StatusCode = 400
+                }
+            });
+
+        var result = EnergiaClienteHandler.UploadNewReading(new Reading()
+        {
+            Cheias = requestModel.cheias,
+            Ponta = requestModel.ponta,
+            Vazio = requestModel.vazio,
+            Estimated = false,
+            HabitationId = requestModel.habitation,
+            Month = month,
+            Year = year,
+            ReadingDate = today
+        });
 
         if (result.Status.Error == true)
         {

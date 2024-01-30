@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj": {}
+    "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj": {}
   },
   "projects": {
-    "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj": {
+    "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj",
+        "projectUniqueName": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj",
         "projectName": "EnergiaClienteWebApi",
-        "projectPath": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj",
+        "projectPath": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\EnergiaClienteWebApi.csproj",
         "packagesPath": "C:\\Users\\ruben\\.nuget\\packages\\",
-        "outputPath": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\obj\\",
+        "outputPath": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteWebApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

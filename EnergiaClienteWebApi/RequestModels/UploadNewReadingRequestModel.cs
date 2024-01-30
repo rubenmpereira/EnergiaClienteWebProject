@@ -1,10 +1,10 @@
-﻿namespace EnergiaClienteWebApi.RequestModels
+namespace EnergiaClienteWebApi.RequestModels
 {
-    public class CalculateInvoiceRequestModel
+    public class UploadNewReadingRequestModel
     {
         public int habitation { get; set; }
-        public int vazio { get; set; }
         public int ponta { get; set; }
         public int cheias { get; set; }
+        public int vazio { get; set; }
     }
 }
