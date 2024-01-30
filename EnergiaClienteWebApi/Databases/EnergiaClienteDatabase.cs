@@ -1,4 +1,4 @@
-namespace EnergiaClienteWebApi.Database;
+namespace EnergiaClienteWebApi.Databases;
 
 using System.Data;
 using System.Text;
@@ -39,6 +39,8 @@ public record Invoice
     public byte[]? Document { get; set; }
 }
 
+public record CostKwh(decimal costkwhPonta,decimal costkwhCheias,decimal costkwhVazio);
+
 public class dbResponse<T>
 {
     public dbResponse()
@@ -55,22 +57,23 @@ public class StatusObject
     public StatusObject(bool _error)
     {
         this.Error = _error;
-        this.StatusCode=200;
+        this.StatusCode = 200;
     }
     public bool Error { get; set; }
     public int StatusCode { get; set; }
     public string? ErrorMessage { get; set; }
 }
 
-public class EnergiaCliente
+public class EnergiaClienteDatabase
 {
-    //private static SqlConnection connection = new SqlConnection("Data Source=MSIRUBEN\\SQLEXPRESS;Initial Catalog=EnergiaClienteDados;Integrated Security=True;TrustServerCertificate=True");
-
     private static SqlConnection connection = new SqlConnection("Data Source=192.168.1.8,1433;Initial Catalog=EnergiaClienteDados;User ID=sa;Password=1Secure*Password1;TrustServerCertificate=True");
+    
     //get from db
-    private static decimal costkwhPonta => 0.24m;
-    private static decimal costkwhCheias => 0.1741m;
-    private static decimal costkwhVazio => 0.1072m;
+    private static CostKwh costKwh => new CostKwh(0.24m,0.1741m,0.1072m);
+
+    public static CostKwh GetCostKwh(){
+        return costKwh;
+    }
 
     public static dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
     {
@@ -87,14 +90,16 @@ public class EnergiaCliente
         var invoices = new List<Invoice>();
         foreach (DataRow row in response)
         {
-            var invoice = new Invoice();
-            invoice.Number = GetParam<string>(row["numero"]);
-            invoice.StartDate = GetParam<DateTime>(row["dataInicio"]);
-            invoice.EndDate = GetParam<DateTime>(row["dataFim"]);
-            invoice.Paid = GetParam<bool>(row["pago"]);
-            invoice.Value = GetParam<decimal>(row["valor"]);
-            invoice.LimitDate = GetParam<DateTime>(row["dataLimite"]);
-            invoice.HabitationId = GetParam<int>(row["idHabitacao"]);
+            var invoice = new Invoice
+            {
+                Number = GetParam<string>(row["numero"]),
+                StartDate = GetParam<DateTime>(row["dataInicio"]),
+                EndDate = GetParam<DateTime>(row["dataFim"]),
+                Paid = GetParam<bool>(row["pago"]),
+                Value = GetParam<decimal>(row["valor"]),
+                LimitDate = GetParam<DateTime>(row["dataLimite"]),
+                HabitationId = GetParam<int>(row["idHabitacao"])
+            };
             var documentString = row["documento"].ToString();
             invoice.Document = Encoding.ASCII.GetBytes(documentString != null ? documentString : "");
             invoices.Add(invoice);
@@ -125,16 +130,18 @@ public class EnergiaCliente
         var readings = new List<Reading>();
         foreach (DataRow row in response)
         {
-            var reading = new Reading();
-            reading.Id = GetParam<int>(row["id"]);
-            reading.Vazio = GetParam<int>(row["vazio"]);
-            reading.Ponta = GetParam<int>(row["ponta"]);
-            reading.Cheias = GetParam<int>(row["cheias"]);
-            reading.Month = GetParam<int>(row["mes"]);
-            reading.Year = GetParam<int>(row["ano"]);
-            reading.ReadingDate = GetParam<DateTime>(row["dataLeitura"]);
-            reading.HabitationId = GetParam<int>(row["idHabitacao"]);
-            reading.Estimated = GetParam<bool>(row["estimada"]);
+            var reading = new Reading
+            {
+                Id = GetParam<int>(row["id"]),
+                Vazio = GetParam<int>(row["vazio"]),
+                Ponta = GetParam<int>(row["ponta"]),
+                Cheias = GetParam<int>(row["cheias"]),
+                Month = GetParam<int>(row["mes"]),
+                Year = GetParam<int>(row["ano"]),
+                ReadingDate = GetParam<DateTime>(row["dataLeitura"]),
+                HabitationId = GetParam<int>(row["idHabitacao"]),
+                Estimated = GetParam<bool>(row["estimada"])
+            };
 
             readings.Add(reading);
         }
@@ -144,19 +151,6 @@ public class EnergiaCliente
             Result = readings,
             Status = new StatusObject(false)
         };
-    }
-
-    public static dbResponse<decimal> CalculateAmountPay(int habitation, Reading reading)
-    {
-        var readings = GetReadings(new GetReadingsRequestModel() { habitation = habitation, quantity = 1 });
-
-        if (readings.Result == null) return new dbResponse<decimal>() { Status = readings.Status };
-
-        var last = readings.Result[0];
-
-        decimal amount = (reading.Ponta - last.Ponta) * costkwhPonta + (reading.Cheias - last.Cheias) * costkwhCheias + (reading.Vazio - last.Vazio) * costkwhVazio;
-
-        return new dbResponse<decimal>() { Result = new List<decimal> { amount } };
     }
 
     private static DataRowCollection RunSelectProcedure(string procedure, SqlParameter[] parameters)
