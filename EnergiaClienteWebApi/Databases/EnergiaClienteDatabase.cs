@@ -90,14 +90,16 @@ public class EnergiaClienteDatabase
         var invoices = new List<Invoice>();
         foreach (DataRow row in response)
         {
-            var invoice = new Invoice();
-            invoice.Number = GetParam<string>(row["numero"]);
-            invoice.StartDate = GetParam<DateTime>(row["dataInicio"]);
-            invoice.EndDate = GetParam<DateTime>(row["dataFim"]);
-            invoice.Paid = GetParam<bool>(row["pago"]);
-            invoice.Value = GetParam<decimal>(row["valor"]);
-            invoice.LimitDate = GetParam<DateTime>(row["dataLimite"]);
-            invoice.HabitationId = GetParam<int>(row["idHabitacao"]);
+            var invoice = new Invoice
+            {
+                Number = GetParam<string>(row["numero"]),
+                StartDate = GetParam<DateTime>(row["dataInicio"]),
+                EndDate = GetParam<DateTime>(row["dataFim"]),
+                Paid = GetParam<bool>(row["pago"]),
+                Value = GetParam<decimal>(row["valor"]),
+                LimitDate = GetParam<DateTime>(row["dataLimite"]),
+                HabitationId = GetParam<int>(row["idHabitacao"])
+            };
             var documentString = row["documento"].ToString();
             invoice.Document = Encoding.ASCII.GetBytes(documentString != null ? documentString : "");
             invoices.Add(invoice);
@@ -128,16 +130,18 @@ public class EnergiaClienteDatabase
         var readings = new List<Reading>();
         foreach (DataRow row in response)
         {
-            var reading = new Reading();
-            reading.Id = GetParam<int>(row["id"]);
-            reading.Vazio = GetParam<int>(row["vazio"]);
-            reading.Ponta = GetParam<int>(row["ponta"]);
-            reading.Cheias = GetParam<int>(row["cheias"]);
-            reading.Month = GetParam<int>(row["mes"]);
-            reading.Year = GetParam<int>(row["ano"]);
-            reading.ReadingDate = GetParam<DateTime>(row["dataLeitura"]);
-            reading.HabitationId = GetParam<int>(row["idHabitacao"]);
-            reading.Estimated = GetParam<bool>(row["estimada"]);
+            var reading = new Reading
+            {
+                Id = GetParam<int>(row["id"]),
+                Vazio = GetParam<int>(row["vazio"]),
+                Ponta = GetParam<int>(row["ponta"]),
+                Cheias = GetParam<int>(row["cheias"]),
+                Month = GetParam<int>(row["mes"]),
+                Year = GetParam<int>(row["ano"]),
+                ReadingDate = GetParam<DateTime>(row["dataLeitura"]),
+                HabitationId = GetParam<int>(row["idHabitacao"]),
+                Estimated = GetParam<bool>(row["estimada"])
+            };
 
             readings.Add(reading);
         }
