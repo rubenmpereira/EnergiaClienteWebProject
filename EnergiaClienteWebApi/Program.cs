@@ -1,3 +1,7 @@
+using EnergiaClienteWebApi.Databases;
+using EnergiaClienteWebApi.Handlers;
+using EnergiaClienteWebApi.RequestModels;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,5 +22,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
+
+app.MapPost("BillingTest", (int id, int month, int year) => EnergiaClienteHandler.Billing(id, month, year));
 
 app.Run();

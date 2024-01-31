@@ -8,4 +8,3 @@ SELECT TOP(10) *,(select D.ficheiro from Documento D Where D.numeroFatura=F.nume
 GO
 
 EXEC UltimasFaturas @habitacao = 1;
-
