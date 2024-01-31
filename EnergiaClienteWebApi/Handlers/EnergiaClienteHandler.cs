@@ -79,7 +79,7 @@ public static class EnergiaClienteHandler
             Month = billingMonth,
             Year = billingYear,
             Estimated = true,
-            ReadingDate = new DateTime()
+            ReadingDate = DateTime.Now
         };
 
         EnergiaClienteDatabase.InsertReading(estimated);

@@ -251,7 +251,7 @@ public class EnergiaClienteDatabase
                 new SqlParameter("cheias", model.Cheias),
                 new SqlParameter("mes", model.Month),
                 new SqlParameter("ano", model.Year),
-                new SqlParameter("dataLeitura", new DateTime()),
+                new SqlParameter("dataLeitura", model.ReadingDate),
             };
 
         var response = RunInsertProcedure("AdicionarLeitura", parameters);
