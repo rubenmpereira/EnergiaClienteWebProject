@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using EnergiaClienteWebApi.Domains;
 using EnergiaClienteWebApi.Databases;
-using EnergiaClienteWebApi.RequestModels;
 using EnergiaClienteWebApi.Handlers;
+using EnergiaClienteWebApi.RequestModels;
 
 [Route("[controller]/[action]")]
 public class EnergiaClienteController : ControllerBase

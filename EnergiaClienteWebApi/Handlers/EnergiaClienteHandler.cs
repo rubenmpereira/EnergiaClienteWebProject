@@ -1,4 +1,5 @@
 using System.Text;
+using EnergiaClienteWebApi.Domains;
 using EnergiaClienteWebApi.Databases;
 using EnergiaClienteWebApi.RequestModels;
 

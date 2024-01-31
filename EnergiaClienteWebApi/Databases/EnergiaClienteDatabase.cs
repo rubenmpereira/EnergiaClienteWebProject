@@ -1,84 +1,14 @@
-namespace EnergiaClienteWebApi.Databases;
 
 using System.Data;
 using System.Text;
-using EnergiaClienteWebApi.RequestModels;
 using Microsoft.Data.SqlClient;
+using EnergiaClienteWebApi.Domains;
+using EnergiaClienteWebApi.RequestModels;
 
+namespace EnergiaClienteWebApi.Databases;
 
-public record Reading
+public class EnergiaClienteDatabase : DatabaseFunctions
 {
-    public int Id { get; set; }
-    public int Vazio { get; set; }
-    public int Ponta { get; set; }
-    public int Cheias { get; set; }
-    public int Month { get; set; }
-    public int Year { get; set; }
-    public DateTime ReadingDate { get; set; }
-    public int HabitationId { get; set; }
-    public bool Estimated { get; set; }
-}
-
-public record Habitation
-{
-    public decimal CostPontaKwh { get; set; }
-    public decimal CostCheiasKwh { get; set; }
-    public decimal CostVazioKwh { get; set; }
-
-}
-
-public record Invoice
-{
-    public string? Number { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-    public bool Paid { get; set; }
-    public decimal Value { get; set; }
-    public DateTime LimitDate { get; set; }
-    public int HabitationId { get; set; }
-    public byte[]? Document { get; set; }
-}
-
-public record CostKwh(decimal costkwhPonta, decimal costkwhCheias, decimal costkwhVazio);
-
-public class dbResponse<T>
-{
-    public dbResponse()
-    {
-        this.Status = new StatusObject(false);
-    }
-    public dbResponse(T value)
-    {
-        this.Result = new List<T>() { value };
-        this.Status = new StatusObject(false);
-    }
-    public dbResponse(List<T> values)
-    {
-        this.Result = values;
-        this.Status = new StatusObject(false);
-    }
-    public StatusObject Status { get; set; }
-    public List<T>? Result { get; set; }
-}
-
-public class StatusObject
-{
-    public StatusObject() { }
-    public StatusObject(bool _error)
-    {
-        this.Error = _error;
-        this.ErrorMessage = "";
-        if (_error == false)
-            this.StatusCode = 200;
-    }
-    public bool Error { get; set; }
-    public int StatusCode { get; set; }
-    public string? ErrorMessage { get; set; }
-}
-
-public class EnergiaClienteDatabase
-{
-    private static SqlConnection connection = new SqlConnection("Data Source=192.168.1.8,1433;Initial Catalog=EnergiaClienteDados;User ID=sa;Password=1Secure*Password1;TrustServerCertificate=True");
 
     private static CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m); //get from db
 
@@ -299,60 +229,6 @@ public class EnergiaClienteDatabase
                 StatusCode = 500
             };
         return result;
-    }
-
-    private static DataRowCollection RunSelectProcedure(string procedure, List<SqlParameter> parameters)
-    {
-        var dataAdapter = new SqlDataAdapter(procedure, connection);
-        dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-        dataAdapter.SelectCommand.Parameters.AddRange(parameters.ToArray());
-        var dataSet = new DataSet();
-        dataAdapter.Fill(dataSet);
-
-        return dataSet.Tables[0].Rows;
-    }
-    private static bool RunInsertProcedure(string procedure, List<SqlParameter> parameters)
-    {
-        var command = new SqlCommand(procedure, connection)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
-
-        command.Parameters.AddRange(parameters.ToArray());
-
-        try
-        {
-            connection.Open();
-            return command.ExecuteNonQuery() > 0 ? true : false;
-        }
-        catch (Exception ex)
-        {
-            var x = ex;
-            return false;
-        }
-        finally
-        {
-            connection.Close();
-        }
-    }
-    private static T? GetParam<T>(object value)
-    {
-        object x = value != null ? value : "";
-
-        string? param = x.ToString();
-
-        T? result;
-
-        try
-        {
-            result = (T?)Convert.ChangeType(param, typeof(T));
-        }
-        catch
-        {
-            result = default(T);
-        }
-
-        return result != null ? result : default(T);
     }
 
 }
