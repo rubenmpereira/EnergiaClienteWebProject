@@ -153,7 +153,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return new dbResponse<Reading>(reading);
     }
 
-    public static dbResponse<decimal> GetUnpaidTotal(GetInvoicesRequestModel requestModel)
+    public static dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 

@@ -150,4 +150,64 @@ public static class EnergiaClienteHandler
         return EnergiaClienteDatabase.GetHabitationIds();
     }
 
+    public static dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.GetInvoices(requestModel);
+    }
+
+    public static dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.GetUnpaidTotal(requestModel);
+    }
+
+    public static dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.GetUserDetails(requestModel);
+    }
+
+    public static dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.GetHolderDetails(requestModel);
+    }
+
+    public static dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.GetHabitationDetails(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHabitationPower(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHolderName(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHolderNif(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHolderContact(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHabitationTensionLevel(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHabitationSchedule(requestModel);
+    }
+
+    public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
+    {
+        return EnergiaClienteDatabase.UpdateHabitationPhase(requestModel);
+    }
+
 }
