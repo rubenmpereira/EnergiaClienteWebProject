@@ -63,6 +63,12 @@ public class StatusObject
                 break;
         }
     }
+    public StatusObject(int code, string message)
+    {
+        this.StatusCode = code;
+        this.Error = true;
+        this.ErrorMessage = message;
+    }
     public bool Error { get; set; }
     public int StatusCode { get; set; }
     public string? ErrorMessage { get; set; }

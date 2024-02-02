@@ -90,7 +90,7 @@ public static class EnergiaClienteHandler
 
     private static decimal CalculateAmount(Reading reading, Reading oldReading)
     {
-        var cost = EnergiaClienteDatabase.GetCostKwh();//get Cost Kwh for this habitation
+        var cost = EnergiaClienteDatabase.GetCostKwh();
 
         decimal amountponta = (reading.Ponta - oldReading.Ponta) * cost.costkwhPonta;
         decimal amountcheias = (reading.Cheias - oldReading.Cheias) * cost.costkwhCheias;
@@ -143,6 +143,11 @@ public static class EnergiaClienteHandler
         };
 
         EnergiaClienteDatabase.Billing(request);
+    }
+
+    public static dbResponse<int> GetHabitationIds()
+    {
+        return EnergiaClienteDatabase.GetHabitationIds();
     }
 
 }

@@ -296,7 +296,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
             schedule = GetParam<string>(row["schedule"])
         };
 
-        habitation.costKwh= GetCostKwh();
+        habitation.costKwh = GetCostKwh();
 
         return new dbResponse<Habitation>(habitation);
     }
@@ -433,7 +433,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-        public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
+    public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -453,6 +453,22 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 StatusCode = 500
             };
         return result;
+    }
+
+    public static dbResponse<int> GetHabitationIds()
+    {
+        var response = RunSelectProcedure("ListaIdHabitacao");
+
+        if (response.Count == 0)
+            return new dbResponse<int> { Status = new StatusObject(404) };
+
+        var ids = new List<int>();
+        foreach (DataRow row in response)
+        {
+            ids.Add(GetParam<int>(row["id"]));
+        }
+
+        return new dbResponse<int>(ids);
     }
 
 }
