@@ -24,7 +24,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var response = RunSelectProcedure("UltimasFaturas", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
-            return new dbResponse<Invoice> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
+            return new dbResponse<Invoice> { Status = new StatusObject(404) };
 
         var invoices = new List<Invoice>();
         foreach (DataRow row in response)
@@ -62,7 +62,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var response = RunSelectProcedure("UltimasLeituras", parameters);
 
         if (response.Count == 0)
-            return new dbResponse<Reading> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
+            return new dbResponse<Reading> { Status = new StatusObject(404) };
 
         //mapping
         var readings = new List<Reading>();
@@ -98,7 +98,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var response = RunSelectProcedure("UltimasLeiturasReais", parameters);
 
         if (response.Count == 0)
-            return new dbResponse<Reading> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
+            return new dbResponse<Reading> { Status = new StatusObject(404) };
 
         var readings = new List<Reading>();
         foreach (DataRow row in response)
@@ -133,7 +133,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var response = RunSelectProcedure("ReceberLeitura", parameters);
 
         if (response.Count == 0)
-            return new dbResponse<Reading> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
+            return new dbResponse<Reading> { Status = new StatusObject(404) };
 
         DataRow row = response[0];
 
@@ -159,7 +159,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         var response = RunSelectProcedure("TotalPorPagar", new List<SqlParameter>() { param });
         if (response.Count == 0)
-            return new dbResponse<decimal> { Status = new StatusObject() { Error = true, ErrorMessage = "Not found", StatusCode = 404 } };
+            return new dbResponse<decimal> { Status = new StatusObject(404) };
 
         DataRow row = response[0];
 
@@ -231,4 +231,225 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
+    public static dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
+    {
+        var param = new SqlParameter("email", requestModel.email);
+
+        var response = RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+
+        if (response.Count == 0)
+            return new dbResponse<User> { Status = new StatusObject(404) };
+
+        DataRow row = response[0];
+
+        User user = new User()
+        {
+            email = GetParam<string>(row["email"]),
+            contact = GetParam<string>(row["contacto"]),
+            fullName = GetParam<string>(row["nomeCompleto"]),
+            gender = GetParam<bool>(row["genero"]),
+            nif = GetParam<string>(row["nif"])
+        };
+
+        return new dbResponse<User>(user);
+    }
+
+    public static dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
+    {
+        var param = new SqlParameter("habitacao", requestModel.habitation);
+
+        var response = RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+
+        if (response.Count == 0)
+            return new dbResponse<Holder> { Status = new StatusObject(404) };
+
+        DataRow row = response[0];
+
+        Holder holder = new Holder()
+        {
+            HabitationId = GetParam<int>(row["idHabitacao"]),
+            contact = GetParam<string>(row["contacto"]),
+            fullName = GetParam<string>(row["nomeCompleto"]),
+            nif = GetParam<string>(row["nif"])
+        };
+
+        return new dbResponse<Holder>(holder);
+    }
+
+    public static dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
+    {
+        var param = new SqlParameter("habitacao", requestModel.habitation);
+
+        var response = RunSelectProcedure("DetalhesHabitacao", new List<SqlParameter>() { param });
+
+        if (response.Count == 0)
+            return new dbResponse<Habitation> { Status = new StatusObject(404) };
+
+        DataRow row = response[0];
+
+        Habitation holder = new Habitation()
+        {
+            userEmail = GetParam<string>(row["userEmail"]),
+            power = GetParam<decimal>(row["power"]),
+            phase = GetParam<string>(row["phase"]),
+            tensionLevel = GetParam<string>(row["tensionLevel"]),
+            schedule = GetParam<string>(row["schedule"])
+        };
+
+        return new dbResponse<Habitation>(holder);
+    }
+
+    public static dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("potencia", requestModel.power),
+            };
+
+        var response = RunInsertProcedure("AlterarPotenciaHabitacao", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+    public static dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("nomeCompleto", requestModel.fullName),
+            };
+
+        var response = RunInsertProcedure("AlterarNomeTitular", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+    public static dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("nif", requestModel.nif),
+            };
+
+        var response = RunInsertProcedure("AlterarNifTitular", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+    public static dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("contacto", requestModel.contact),
+            };
+
+        var response = RunInsertProcedure("AlterarContactoTitular", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+    public static dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("nivelTensao", requestModel.tensionLevel),
+            };
+
+        var response = RunInsertProcedure("AlterarNivelHabitacao", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+    public static dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("horario", requestModel.schedule),
+            };
+
+        var response = RunInsertProcedure("AlterarHorarioHabitacao", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
+
+        public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
+    {
+        var parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("habitacao", requestModel.habitation),
+                new SqlParameter("fase", requestModel.phase),
+            };
+
+        var response = RunInsertProcedure("AlterarFaseHabitacao", parameters);
+
+        var result = new dbResponse<string>();
+
+        if (response == false)
+            result.Status = new StatusObject()
+            {
+                Error = true,
+                ErrorMessage = "SQL failed to run insert command",
+                StatusCode = 500
+            };
+        return result;
+    }
 }
