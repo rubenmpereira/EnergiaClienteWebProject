@@ -10,7 +10,7 @@ namespace EnergiaClienteWebApi.Databases;
 public class EnergiaClienteDatabase : DatabaseFunctions
 {
 
-    private static CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m); //get from db
+    private static CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m);
 
     public static CostKwh GetCostKwh()
     {
@@ -287,7 +287,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         DataRow row = response[0];
 
-        Habitation holder = new Habitation()
+        Habitation habitation = new Habitation()
         {
             userEmail = GetParam<string>(row["userEmail"]),
             power = GetParam<decimal>(row["power"]),
@@ -296,7 +296,9 @@ public class EnergiaClienteDatabase : DatabaseFunctions
             schedule = GetParam<string>(row["schedule"])
         };
 
-        return new dbResponse<Habitation>(holder);
+        habitation.costKwh= GetCostKwh();
+
+        return new dbResponse<Habitation>(habitation);
     }
 
     public static dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
@@ -452,4 +454,5 @@ public class EnergiaClienteDatabase : DatabaseFunctions
             };
         return result;
     }
+
 }

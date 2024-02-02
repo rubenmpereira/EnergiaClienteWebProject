@@ -88,9 +88,7 @@ public record Habitation
     public string? phase { get; set; }
     public string? tensionLevel { get; set; }
     public string? schedule { get; set; }
-    public decimal CostPontaKwh { get; set; }
-    public decimal CostCheiasKwh { get; set; }
-    public decimal CostVazioKwh { get; set; }
+    public CostKwh? costKwh { get; set; }
 }
 
 public record Invoice
