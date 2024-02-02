@@ -32,12 +32,11 @@ public class EnergiaClienteController : ControllerBase
     [HttpPost(Name = "UploadNewReading")]
     public ActionResult<dbResponse<decimal>> UploadNewReading([FromQuery] UploadNewReadingRequestModel requestModel)
     {
-        //TEST ME PLEASE!
         var today = DateTime.Now;
         int month = today.AddMonths(-1).Month;
         int year = today.AddMonths(-1).Year;
 
-        if (today.Day < 5 || today.Day > 7) // Check if there is better way to do this
+        if (today.Day < 5 || today.Day > 7)
             return new BadRequestObjectResult(new dbResponse<decimal>()
             {
                 Status = new StatusObject()
@@ -55,7 +54,7 @@ public class EnergiaClienteController : ControllerBase
             year = year
         });
 
-        if (readingResult.Result != null) // test this if works!
+        if (readingResult.Result != null)
             return new BadRequestObjectResult(new dbResponse<decimal>()
             {
                 Status = new StatusObject()
