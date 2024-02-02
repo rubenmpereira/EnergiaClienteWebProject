@@ -7,7 +7,7 @@ using EnergiaClienteWebApi.RequestModels;
 [Route("[controller]/[action]")]
 public class EnergiaClienteController : ControllerBase
 {
-    //private IDatabase DB { get; set; } 
+    //private IEnergiaClienteHandler Handler { get; set; } 
     public EnergiaClienteController()
     {
 

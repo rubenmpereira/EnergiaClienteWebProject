@@ -30,6 +30,45 @@ public class StatusObject
         if (_error == false)
             this.StatusCode = 200;
     }
+    public StatusObject(int code)
+    {
+        this.StatusCode = code;
+        switch (code)
+        {
+            case 200:
+                this.Error = false;
+                break;
+            case 400:
+                this.Error = true;
+                this.ErrorMessage = "Bad request";
+                break;
+            case 401:
+                this.Error = true;
+                this.ErrorMessage = "Unautherized";
+                break;
+            case 403:
+                this.Error = true;
+                this.ErrorMessage = "Forbidden";
+                break;
+            case 404:
+                this.Error = true;
+                this.ErrorMessage = "Not found";
+                break;
+            case 500:
+                this.Error = true;
+                this.ErrorMessage = "Internal server error";
+                break;
+            default:
+
+                break;
+        }
+    }
+    public StatusObject(int code, string message)
+    {
+        this.StatusCode = code;
+        this.Error = true;
+        this.ErrorMessage = message;
+    }
     public bool Error { get; set; }
     public int StatusCode { get; set; }
     public string? ErrorMessage { get; set; }
@@ -50,10 +89,12 @@ public record Reading
 
 public record Habitation
 {
-    public decimal CostPontaKwh { get; set; }
-    public decimal CostCheiasKwh { get; set; }
-    public decimal CostVazioKwh { get; set; }
-
+    public string? userEmail { get; set; }
+    public decimal power { get; set; }
+    public string? phase { get; set; }
+    public string? tensionLevel { get; set; }
+    public string? schedule { get; set; }
+    public CostKwh? costKwh { get; set; }
 }
 
 public record Invoice
@@ -66,6 +107,23 @@ public record Invoice
     public DateTime LimitDate { get; set; }
     public int HabitationId { get; set; }
     public byte[]? Document { get; set; }
+}
+
+public record User
+{
+    public string? email { get; set; }
+    public string? fullName { get; set; }
+    public string? nif { get; set; }
+    public string? contact { get; set; }
+    public bool gender { get; set; }
+}
+
+public record Holder
+{
+    public int HabitationId { get; set; }
+    public string? fullName { get; set; }
+    public string? nif { get; set; }
+    public string? contact { get; set; }
 }
 
 public record CostKwh(decimal costkwhPonta, decimal costkwhCheias, decimal costkwhVazio);

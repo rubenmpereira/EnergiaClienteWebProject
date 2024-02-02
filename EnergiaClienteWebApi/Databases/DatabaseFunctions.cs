@@ -19,6 +19,16 @@ public class DatabaseFunctions
         return dataSet.Tables[0].Rows;
     }
 
+    private protected static DataRowCollection RunSelectProcedure(string procedure)
+    {
+        var dataAdapter = new SqlDataAdapter(procedure, connection);
+        dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+        var dataSet = new DataSet();
+        dataAdapter.Fill(dataSet);
+
+        return dataSet.Tables[0].Rows;
+    }
+
     private protected static bool RunInsertProcedure(string procedure, List<SqlParameter> parameters)
     {
         var command = new SqlCommand(procedure, connection)
