@@ -1,12 +1,7 @@
-using EnergiaClienteWebApi.Databases;
-using EnergiaClienteWebApi.Databases.Interfaces;
 using EnergiaClienteWebApi.RequestModels;
 using EnergiaClienteWebApi.Domains;
 using Moq;
-using Microsoft.Data.SqlClient;
-using System.Data;
 using EnergiaClienteWebApi.Handlers.Interfaces;
-using EnergiaClienteWebApi.Handlers;
 
 namespace EnergiaClienteTests.EnergiaCliente;
 

@@ -1,7 +1,5 @@
-using System.Data;
 using EnergiaClienteWebApi.Domains;
 using EnergiaClienteWebApi.RequestModels;
-using Microsoft.Data.SqlClient;
 
 namespace EnergiaClienteWebApi.Databases.Interfaces;
 
