@@ -4,6 +4,7 @@ public class dbResponse<T>
 {
     public dbResponse()
     {
+        this.Result= new List<T>();
         this.Status = new StatusObject(false);
     }
     public dbResponse(T value)
@@ -17,7 +18,7 @@ public class dbResponse<T>
         this.Status = new StatusObject(false);
     }
     public StatusObject Status { get; set; }
-    public List<T>? Result { get; set; }
+    public List<T> Result { get; set; }
 }
 
 public class StatusObject

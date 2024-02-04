@@ -24,14 +24,11 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var response = RunSelectProcedure("UltimasFaturas", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
-            return new dbResponse<Invoice> { Status = new StatusObject(404) };
+            return new dbResponse<Invoice>() { Status = new StatusObject(404) };
 
         var invoices = new List<Invoice>();
         foreach (DataRow row in response)
         {
-            var invoicesss = new Invoice();
-            invoicesss.Paid = true;
-
             var invoice = new Invoice
             {
                 Number = GetParam<string>(row["numero"]),

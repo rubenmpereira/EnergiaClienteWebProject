@@ -1,6 +1,4 @@
-using EnergiaClienteWebApi.Databases;
 using EnergiaClienteWebApi.Handlers;
-using EnergiaClienteWebApi.RequestModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
