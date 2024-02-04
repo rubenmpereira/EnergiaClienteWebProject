@@ -21,28 +21,29 @@ public static class EnergiaClienteHandler
     {
         EnergiaClienteDatabase.InsertReading(reading);
 
-        Reading oldReading = GetpreviousMonthReading(reading.HabitationId, reading.Month, reading.Year);
+        var oldReadingResult = GetpreviousMonthReading(new GetReadingByDateRequestModel()
+        {
+            habitation = reading.HabitationId,
+            month = reading.Month,
+            year = reading.Year
+        });
+
+        Reading oldReading = new Reading();
+
+        if (oldReadingResult.Result.Count > 0)
+            oldReading = oldReadingResult.Result[0];
 
         return new dbResponse<decimal>(CalculateAmount(reading, oldReading));
     }
 
-    public static Reading GetpreviousMonthReading(int habitation, int month, int year)
+    public static dbResponse<Reading> GetpreviousMonthReading(GetReadingByDateRequestModel requestModel)
     {
-        var Readingresult = EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
+        return EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
         {
-            habitation = habitation,
-            month = month > 1 ? month - 1 : 12,
-            year = month > 1 ? year : year - 1
+            habitation = requestModel.habitation,
+            month = requestModel.month > 1 ? requestModel.month - 1 : 12,
+            year = requestModel.month > 1 ? requestModel.year : requestModel.year - 1
         });
-
-        Reading reading;
-
-        if (Readingresult.Result == null)
-            reading = new Reading();
-        else
-            reading = Readingresult.Result[0];
-
-        return reading;
     }
 
     private static Reading GenerateEstimatedReading(int habitation, int billingMonth, int billingYear, Reading lastMonth)
@@ -103,20 +104,31 @@ public static class EnergiaClienteHandler
 
     private static decimal CalculateBillingAmount(int habitation, int billingMonth, int billingYear)
     {
-        var readingresult = EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
+        var readingResult = EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
         {
             habitation = habitation,
             month = billingMonth,
             year = billingYear
         });
 
-        Reading oldReading = GetpreviousMonthReading(habitation, billingMonth, billingYear);
+        var oldReadingResult = GetpreviousMonthReading(new GetReadingByDateRequestModel()
+        {
+            habitation = habitation,
+            month = billingMonth,
+            year = billingYear
+        });
+
+        Reading oldReading = new Reading();
+
+        if (oldReadingResult.Result.Count > 0)
+            oldReading = oldReadingResult.Result[0];
+
         Reading reading;
 
-        if (readingresult.Result == null)
+        if (readingResult.Result == null)
             reading = GenerateEstimatedReading(habitation, billingMonth, billingYear, oldReading);
         else
-            reading = readingresult.Result[0];
+            reading = readingResult.Result[0];
 
         return CalculateAmount(reading, oldReading);
     }
