@@ -211,10 +211,12 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
                 new SqlParameter("documento", requestModel.document)
             };
 
-        var parameterValue = new SqlParameter("valor", SqlDbType.Decimal);//decimal is being stored as int - FIX THIS!
-        parameterValue.Value = requestModel.value;
-        parameterValue.Precision = 8;//this didnt work try something else...
-        parameterValue.Scale = 4;
+        var parameterValue = new SqlParameter("valor", SqlDbType.Decimal)
+        {
+            Value = requestModel.value,
+            Precision = 8,//this didnt work try something else...
+            Scale = 4
+        };//decimal is being stored as int - FIX THIS!
         parameters.Add(parameterValue);
 
         var response = functions.RunInsertProcedure("Faturacao", parameters);

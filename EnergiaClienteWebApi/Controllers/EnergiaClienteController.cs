@@ -58,7 +58,7 @@ public class EnergiaClienteController : ControllerBase
             year = year
         });
 
-        if (readingResult.Result != null)
+        if (readingResult.Result.Count > 0)
             return new BadRequestObjectResult(new dbResponse<decimal>()
             {
                 Status = new StatusObject()

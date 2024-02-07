@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FpgMdFS8Pm1Of3V6ec8MV9DQnkOCbzc4+8t5l3DAYaUDZPvnMDCNxQFmuqJ2hWpVNNYkZal3SIIONS7poUFIRA==",
+  "dgSpecHash": "qQ47dmwwLYf3BqYzFKrT+DglBqY51ayKLB8B7j5H8EAxc0CaH576XD3zB/DNtJeFtXn1EuRznJ1mmh0ikZ/xFQ==",
   "success": true,
-  "projectFilePath": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
+  "projectFilePath": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ruben\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\ruben\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
