@@ -11,8 +11,8 @@ public interface IEnergiaClienteDatabase
     public dbResponse<Reading> GetRealReadings(GetReadingsRequestModel requestModel);
     public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel);
     public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel);
-    public dbResponse<string> InsertReading(Reading model);
-    public dbResponse<string> Billing(BillingRequestModel requestModel);
+    public dbResponse<string> InsertReading(InsertReadingRequestModel requestModel);
+    public dbResponse<string> InsertInvoice(InsertInvoiceRequestModel requestModel);
     public dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel);
     public dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel);
     public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel);

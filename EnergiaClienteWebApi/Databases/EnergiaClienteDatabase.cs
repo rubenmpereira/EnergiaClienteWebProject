@@ -170,18 +170,18 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
         return new dbResponse<decimal>(value);
     }
 
-    public dbResponse<string> InsertReading(Reading model)
+    public dbResponse<string> InsertReading(InsertReadingRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", model.HabitationId),
-                new SqlParameter("estimada", model.Estimated),
-                new SqlParameter("vazio", model.Vazio),
-                new SqlParameter("ponta", model.Ponta),
-                new SqlParameter("cheias", model.Cheias),
-                new SqlParameter("mes", model.Month),
-                new SqlParameter("ano", model.Year),
-                new SqlParameter("dataLeitura", model.ReadingDate),
+                new SqlParameter("habitacao", requestModel.HabitationId),
+                new SqlParameter("estimada", requestModel.Estimated),
+                new SqlParameter("vazio", requestModel.Vazio),
+                new SqlParameter("ponta", requestModel.Ponta),
+                new SqlParameter("cheias", requestModel.Cheias),
+                new SqlParameter("mes", requestModel.Month),
+                new SqlParameter("ano", requestModel.Year),
+                new SqlParameter("dataLeitura", requestModel.ReadingDate),
             };
 
         var response = functions.RunInsertProcedure("AdicionarLeitura", parameters);
@@ -198,7 +198,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
         return result;
     }
 
-    public dbResponse<string> Billing(BillingRequestModel requestModel)
+    public dbResponse<string> InsertInvoice(InsertInvoiceRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {

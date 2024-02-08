@@ -9,9 +9,9 @@ public interface IEnergiaClienteHandler
     public dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel);
     public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel);
     public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel);
-    public dbResponse<decimal> UploadNewReading(Reading requestModel);
+    public dbResponse<decimal> UploadNewReading(InsertReadingRequestModel requestModel);
     public dbResponse<Reading> GetpreviousMonthReading(GetReadingByDateRequestModel requestModel);
-    public void Billing(int habitationId, int billingMonth, int billingYear);
+    public dbResponse<string> Billing(BillingRequestModel requestModel);
     public dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel);
     public dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel);
     public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel);

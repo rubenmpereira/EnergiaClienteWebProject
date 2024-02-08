@@ -69,7 +69,7 @@ public class EnergiaClienteController : ControllerBase
                 }
             });
 
-        var result = Handler.UploadNewReading(new Reading()
+        var result = Handler.UploadNewReading(new InsertReadingRequestModel()
         {
             Cheias = requestModel.cheias,
             Ponta = requestModel.ponta,
