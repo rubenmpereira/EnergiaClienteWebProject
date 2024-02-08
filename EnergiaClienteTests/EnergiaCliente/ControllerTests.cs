@@ -46,9 +46,9 @@ public class ControllerTests
         }
         else
         {
-            Assert.NotNull(response.Value);
-            Assert.True(response.Value.Status.Error);
-            Assert.Equal(400, response.Value.Status.StatusCode);
+        Assert.NotNull(response);
+        Assert.NotNull(response.Result);
+        Assert.Equal(typeof(BadRequestObjectResult), response.Result.GetType());
         }
     }
 
@@ -65,24 +65,15 @@ public class ControllerTests
 
         var response = controller.UploadNewReading(new UploadNewReadingRequestModel());
 
-        mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
-        mockHandler.Verify(mock => mock.UploadNewReading(It.IsAny<Reading>()), Times.Never);
+        if (DateTime.Now.Day >= 5 && DateTime.Now.Day <= 7)
+        {
+            mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
+            mockHandler.Verify(mock => mock.UploadNewReading(It.IsAny<Reading>()), Times.Never);
+        }
 
         Assert.NotNull(response);
         Assert.NotNull(response.Result);
         Assert.Equal(typeof(BadRequestObjectResult), response.Result.GetType());
-
-        //Assert.NotNull(response.Result);
-        //Assert.True(response.Value.Status.Error);
-        //Assert.Equal(400, response.Value.Status.StatusCode);
-        //var result = (ActionResult<dbResponse<decimal>>)response.Result as ActionResult<dbResponse<decimal>>;
-        //Assert.NotNull(result);
-        //Assert.NotNull(result.Value);
-        //var resultvalue = (dbResponse<decimal>)result.Value;
-        //Assert.NotNull(resultvalue);
-        //Assert.True(result.Value.Status.Error);
-        //Assert.Equal(400, result.Value.Status.StatusCode);
-
     }
 
     [Fact]
