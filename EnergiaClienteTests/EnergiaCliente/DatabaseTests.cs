@@ -264,7 +264,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertReading(new Reading());
+        var response = database.InsertReading(new InsertReadingRequestModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -280,7 +280,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertReading(new Reading());
+        var response = database.InsertReading(new InsertReadingRequestModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -289,7 +289,7 @@ public class DatabaseTests
     }
 
     [Fact]
-    public void BillingOkResult()
+    public void InsertInvoiceOkResult()
     {
         var mockDatabaseFunctions = new Mock<IDatabaseFunctions>();
 
@@ -298,14 +298,14 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.Billing(new BillingRequestModel());
+        var response = database.InsertInvoice(new InsertInvoiceRequestModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
 
     [Fact]
-    public void BillingInternalErrorResult()
+    public void InsertInvoiceInternalErrorResult()
     {
         var mockDatabaseFunctions = new Mock<IDatabaseFunctions>();
 
@@ -314,7 +314,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.Billing(new BillingRequestModel());
+        var response = database.InsertInvoice(new InsertInvoiceRequestModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);

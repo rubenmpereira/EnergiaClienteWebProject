@@ -32,7 +32,7 @@ public class ControllerTests
 
         mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
         .Returns(new dbResponse<Reading>());
-        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<Reading>()))
+        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<InsertReadingRequestModel>()))
         .Returns(new dbResponse<decimal>(10m));
 
         var controller = new EnergiaClienteController(mockHandler.Object);
@@ -42,7 +42,7 @@ public class ControllerTests
         if (DateTime.Now.Day >= 5 && DateTime.Now.Day <= 7)
         {
             mockHandler.Verify(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
-            mockHandler.Verify(handler => handler.UploadNewReading(It.IsAny<Reading>()), Times.Once);
+            mockHandler.Verify(handler => handler.UploadNewReading(It.IsAny<InsertReadingRequestModel>()), Times.Once);
         }
         else
         {
@@ -59,7 +59,7 @@ public class ControllerTests
 
         mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 1, Cheias = 1, Vazio = 1 }));
-        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<Reading>()));
+        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<InsertReadingRequestModel>()));
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
@@ -68,7 +68,7 @@ public class ControllerTests
         if (DateTime.Now.Day >= 5 && DateTime.Now.Day <= 7)
         {
             mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
-            mockHandler.Verify(mock => mock.UploadNewReading(It.IsAny<Reading>()), Times.Never);
+            mockHandler.Verify(mock => mock.UploadNewReading(It.IsAny<InsertReadingRequestModel>()), Times.Never);
         }
 
         Assert.NotNull(response);

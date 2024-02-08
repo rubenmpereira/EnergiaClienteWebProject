@@ -27,7 +27,10 @@ public class EnergiaClienteHandler : IEnergiaClienteHandler
 
     public dbResponse<decimal> UploadNewReading(InsertReadingRequestModel requestModel)
     {
-        Database.InsertReading(requestModel);
+        var response = Database.InsertReading(requestModel);
+
+        if (response.Status.Error)
+            return new dbResponse<decimal>() { Status = response.Status };
 
         var oldReadingResult = GetpreviousMonthReading(new GetReadingByDateRequestModel()
         {
@@ -236,7 +239,7 @@ public class EnergiaClienteHandler : IEnergiaClienteHandler
 
         Reading reading;
 
-        if (readingResult.Result == null)
+        if (readingResult.Result.Count == 0)
             reading = GenerateEstimatedReading(habitation, billingMonth, billingYear, oldReading);
         else
             reading = readingResult.Result[0];
