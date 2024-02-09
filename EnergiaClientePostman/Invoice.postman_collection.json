@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "ab519b80-e08d-417e-9fe8-0c5c0b0d9e70",
+		"name": "Invoice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetInvoices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetInvoices?habitation=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetInvoices"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUnpaidTotal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetUnpaidTotal?habitation=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetUnpaidTotal"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\",function(){",
+					"    pm.expect(pm.response.code).to.eql(200);",
+					"});"
+				]
+			}
+		}
+	]
+}

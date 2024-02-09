@@ -14,15 +14,15 @@ public class EnergiaClienteController : ControllerBase
 
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
     {
-        if (result.Status.Error == true)
+        var code = result.Status.StatusCode;
+        return code switch
         {
-            if (result.Status.StatusCode == 404)
-                return new NotFoundObjectResult(result);
-            else
-                return new BadRequestObjectResult(result);
-        }
-
-        return new OkObjectResult(result);
+            200 => new OkObjectResult(result),
+            400 => new BadRequestObjectResult(result),
+            401 => new UnauthorizedObjectResult(result),
+            404 => new NotFoundObjectResult(result),
+            _ => StatusCode(code, result)
+        };
     }
 
     [HttpGet(Name = "GetReadings")]
@@ -140,7 +140,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHabitationPower")]
+    [HttpPatch(Name = "UpdateHabitationPower")]
     public ActionResult<dbResponse<string>> UpdateHabitationPower([FromQuery] UpdateHabitationPowerRequestModel requestModel)
     {
         var result = Handler.UpdateHabitationPower(requestModel);
@@ -148,7 +148,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHolderName")]
+    [HttpPatch(Name = "UpdateHolderName")]
     public ActionResult<dbResponse<string>> UpdateHolderName([FromQuery] UpdateHolderNameRequestModel requestModel)
     {
         var result = Handler.UpdateHolderName(requestModel);
@@ -156,7 +156,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHolderNif")]
+    [HttpPatch(Name = "UpdateHolderNif")]
     public ActionResult<dbResponse<string>> UpdateHolderNif([FromQuery] UpdateHolderNifRequestModel requestModel)
     {
         var result = Handler.UpdateHolderNif(requestModel);
@@ -164,7 +164,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHolderContact")]
+    [HttpPatch(Name = "UpdateHolderContact")]
     public ActionResult<dbResponse<string>> UpdateHolderContact([FromQuery] UpdateHolderContactRequestModel requestModel)
     {
         var result = Handler.UpdateHolderContact(requestModel);
@@ -172,7 +172,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHabitationTensionLevel")]
+    [HttpPatch(Name = "UpdateHabitationTensionLevel")]
     public ActionResult<dbResponse<string>> UpdateHabitationTensionLevel([FromQuery] UpdateHabitationTensionLevelRequestModel requestModel)
     {
         var result = Handler.UpdateHabitationTensionLevel(requestModel);
@@ -180,7 +180,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHabitationSchedule")]
+    [HttpPatch(Name = "UpdateHabitationSchedule")]
     public ActionResult<dbResponse<string>> UpdateHabitationSchedule([FromQuery] UpdateHabitationScheduleRequestModel requestModel)
     {
         var result = Handler.UpdateHabitationSchedule(requestModel);
@@ -188,7 +188,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(result);
     }
 
-    [HttpGet(Name = "UpdateHabitationPhase")]
+    [HttpPatch(Name = "UpdateHabitationPhase")]
     public ActionResult<dbResponse<string>> UpdateHabitationPhase([FromQuery] UpdateHabitationPhaseRequestModel requestModel)
     {
         var result = Handler.UpdateHabitationPhase(requestModel);
