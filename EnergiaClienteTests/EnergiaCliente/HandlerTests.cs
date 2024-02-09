@@ -263,7 +263,7 @@ public class HandlerTests
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
         mockDatabase.Setup(database => database.GetRealReadings(It.IsAny<GetReadingsRequestModel>()))
-        .Returns(new dbResponse<Reading>(new Reading() { Ponta = 20, Cheias = 20, Vazio = 20, HabitationId = 1, Month = 10, Year = 2020 }));
+        .Returns(new dbResponse<Reading>(new Reading() { Ponta = 0, Cheias = 0, Vazio = 0, HabitationId = 1, Month = 10, Year = 2020 }));
         mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>());
         mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
