@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "b043fbd3-54a9-4fa3-b2cc-703570e12466",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetUserDetails",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetUserDetails?email=brunoaveiro@gmail.com",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetUserDetails"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "brunoaveiro@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\",function(){",
+					"    pm.expect(pm.response.code).to.eql(200);",
+					"});"
+				]
+			}
+		}
+	]
+}

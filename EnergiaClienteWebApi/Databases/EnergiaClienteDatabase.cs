@@ -260,7 +260,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = functions.RunSelectProcedure("DetalhesUtilizador", [param]);
+        var response = functions.RunSelectProcedure("DetalhesTitular", [param]);
 
         if (response.Count == 0)
             return new dbResponse<Holder> { Status = new StatusObject(404) };
@@ -291,11 +291,11 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
 
         Habitation habitation = new Habitation()
         {
-            userEmail = functions.GetParam<string>(row["userEmail"]),
-            power = functions.GetParam<decimal>(row["power"]),
-            phase = functions.GetParam<string>(row["phase"]),
-            tensionLevel = functions.GetParam<string>(row["tensionLevel"]),
-            schedule = functions.GetParam<string>(row["schedule"]),
+            userEmail = functions.GetParam<string>(row["emailUtilizador"]),
+            power = functions.GetParam<decimal>(row["potencia"]),
+            phase = functions.GetParam<string>(row["fase"]),
+            tensionLevel = functions.GetParam<string>(row["nivelTensao"]),
+            schedule = functions.GetParam<string>(row["horario"]),
             costKwh = GetCostKwh()
         };
 

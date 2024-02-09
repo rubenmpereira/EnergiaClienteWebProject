@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "23c0c86d-fc7b-446d-a7d6-57cdbc7f36d5",
+		"name": "Readings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetReadings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetReadings?habitation=1&quantity=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadings"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						},
+						{
+							"key": "quantity",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetReadingByDate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetReadingByDate?habitation=1&month=10&year=2023",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadingByDate"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						},
+						{
+							"key": "month",
+							"value": "10"
+						},
+						{
+							"key": "year",
+							"value": "2023"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetpreviousMonthReading",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetpreviousMonthReading?habitation=1&month=10&year=2023",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetpreviousMonthReading"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						},
+						{
+							"key": "month",
+							"value": "10"
+						},
+						{
+							"key": "year",
+							"value": "2023"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadNewReading",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/UploadNewReading?habitation=1&ponta=100&cheias=100&vazio=100",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UploadNewReading"
+					],
+					"query": [
+						{
+							"key": "habitation",
+							"value": "1"
+						},
+						{
+							"key": "ponta",
+							"value": "100"
+						},
+						{
+							"key": "cheias",
+							"value": "100"
+						},
+						{
+							"key": "vazio",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\",function(){",
+					"    pm.expect(pm.response.code).to.eql(200);",
+					"});"
+				]
+			}
+		}
+	]
+}
