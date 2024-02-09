@@ -27,7 +27,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = functions.RunSelectProcedure("UltimasFaturas", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("UltimasFaturas", [param]);
 
         if (response.Count == 0)
             return new dbResponse<Invoice>() { Status = new StatusObject(404) };
@@ -56,8 +56,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     public dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>() {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("quantidade", requestModel.quantity)
+                new("habitacao", requestModel.habitation),
+                new("quantidade", requestModel.quantity)
             };
 
         var response = functions.RunSelectProcedure("UltimasLeituras", parameters);
@@ -91,8 +91,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("quantidade", requestModel.quantity)
+                new("habitacao", requestModel.habitation),
+                new("quantidade", requestModel.quantity)
             };
 
         var response = functions.RunSelectProcedure("UltimasLeiturasReais", parameters);
@@ -125,9 +125,9 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>() {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("mes", requestModel.month),
-                new SqlParameter("ano", requestModel.year)
+                new("habitacao", requestModel.habitation),
+                new("mes", requestModel.month),
+                new("ano", requestModel.year)
             };
 
         var response = functions.RunSelectProcedure("ReceberLeitura", parameters);
@@ -157,7 +157,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = functions.RunSelectProcedure("TotalPorPagar", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("TotalPorPagar", [param]);
         if (response.Count == 0)
             return new dbResponse<decimal> { Status = new StatusObject(404) };
 
@@ -174,14 +174,14 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.HabitationId),
-                new SqlParameter("estimada", requestModel.Estimated),
-                new SqlParameter("vazio", requestModel.Vazio),
-                new SqlParameter("ponta", requestModel.Ponta),
-                new SqlParameter("cheias", requestModel.Cheias),
-                new SqlParameter("mes", requestModel.Month),
-                new SqlParameter("ano", requestModel.Year),
-                new SqlParameter("dataLeitura", requestModel.ReadingDate),
+                new("habitacao", requestModel.HabitationId),
+                new("estimada", requestModel.Estimated),
+                new("vazio", requestModel.Vazio),
+                new("ponta", requestModel.Ponta),
+                new("cheias", requestModel.Cheias),
+                new("mes", requestModel.Month),
+                new("ano", requestModel.Year),
+                new("dataLeitura", requestModel.ReadingDate),
             };
 
         var response = functions.RunInsertProcedure("AdicionarLeitura", parameters);
@@ -202,13 +202,13 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("numero", requestModel.number),
-                new SqlParameter("pago", false),
-                new SqlParameter("dataini", requestModel.startDate),
-                new SqlParameter("datafim", requestModel.endDate),
-                new SqlParameter("datalim", requestModel.limitDate),
-                new SqlParameter("documento", requestModel.document)
+                new("habitacao", requestModel.habitation),
+                new("numero", requestModel.number),
+                new("pago", false),
+                new("dataini", requestModel.startDate),
+                new("datafim", requestModel.endDate),
+                new("datalim", requestModel.limitDate),
+                new("documento", requestModel.document)
             };
 
         var parameterValue = new SqlParameter("valor", SqlDbType.Decimal)
@@ -237,7 +237,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("email", requestModel.email);
 
-        var response = functions.RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesUtilizador", [param]);
 
         if (response.Count == 0)
             return new dbResponse<User> { Status = new StatusObject(404) };
@@ -260,7 +260,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = functions.RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesUtilizador", [param]);
 
         if (response.Count == 0)
             return new dbResponse<Holder> { Status = new StatusObject(404) };
@@ -282,7 +282,7 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = functions.RunSelectProcedure("DetalhesHabitacao", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesHabitacao", [param]);
 
         if (response.Count == 0)
             return new dbResponse<Habitation> { Status = new StatusObject(404) };
@@ -295,10 +295,9 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
             power = functions.GetParam<decimal>(row["power"]),
             phase = functions.GetParam<string>(row["phase"]),
             tensionLevel = functions.GetParam<string>(row["tensionLevel"]),
-            schedule = functions.GetParam<string>(row["schedule"])
+            schedule = functions.GetParam<string>(row["schedule"]),
+            costKwh = GetCostKwh()
         };
-
-        habitation.costKwh = GetCostKwh();
 
         return new dbResponse<Habitation>(habitation);
     }
@@ -307,8 +306,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("potencia", requestModel.power),
+                new("habitacao", requestModel.habitation),
+                new("potencia", requestModel.power),
             };
 
         var response = functions.RunInsertProcedure("AlterarPotenciaHabitacao", parameters);
@@ -329,8 +328,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("nomeCompleto", requestModel.fullName),
+                new("habitacao", requestModel.habitation),
+                new("nomeCompleto", requestModel.fullName),
             };
 
         var response = functions.RunInsertProcedure("AlterarNomeTitular", parameters);
@@ -351,8 +350,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("nif", requestModel.nif),
+                new("habitacao", requestModel.habitation),
+                new("nif", requestModel.nif),
             };
 
         var response = functions.RunInsertProcedure("AlterarNifTitular", parameters);
@@ -373,8 +372,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("contacto", requestModel.contact),
+                new("habitacao", requestModel.habitation),
+                new("contacto", requestModel.contact),
             };
 
         var response = functions.RunInsertProcedure("AlterarContactoTitular", parameters);
@@ -395,8 +394,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("nivelTensao", requestModel.tensionLevel),
+                new("habitacao", requestModel.habitation),
+                new("nivelTensao", requestModel.tensionLevel),
             };
 
         var response = functions.RunInsertProcedure("AlterarNivelHabitacao", parameters);
@@ -417,8 +416,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("horario", requestModel.schedule),
+                new("habitacao", requestModel.habitation),
+                new("horario", requestModel.schedule),
             };
 
         var response = functions.RunInsertProcedure("AlterarHorarioHabitacao", parameters);
@@ -439,8 +438,8 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", requestModel.habitation),
-                new SqlParameter("fase", requestModel.phase),
+                new("habitacao", requestModel.habitation),
+                new("fase", requestModel.phase),
             };
 
         var response = functions.RunInsertProcedure("AlterarFaseHabitacao", parameters);
@@ -472,4 +471,5 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
 
         return new dbResponse<int>(ids);
     }
+
 }

@@ -14,15 +14,15 @@ public class EnergiaClienteController : ControllerBase
 
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
     {
-        if (result.Status.Error == true)
+        var code = result.Status.StatusCode;
+        return code switch
         {
-            if (result.Status.StatusCode == 404)
-                return new NotFoundObjectResult(result);
-            else
-                return new BadRequestObjectResult(result);
-        }
-
-        return new OkObjectResult(result);
+            200 => new OkObjectResult(result),
+            400 => new BadRequestObjectResult(result),
+            401 => new UnauthorizedObjectResult(result),
+            404 => new NotFoundObjectResult(result),
+            _ => StatusCode(code, result)
+        };
     }
 
     [HttpGet(Name = "GetReadings")]
