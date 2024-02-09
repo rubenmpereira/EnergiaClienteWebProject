@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using EnergiaClienteWebApi.Domains;
-using EnergiaClienteWebApi.Databases;
-using EnergiaClienteWebApi.Handlers;
 using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Handlers.Interfaces;
 
 [Route("[controller]/[action]")]
 public class EnergiaClienteController : ControllerBase
 {
-    //private IEnergiaClienteHandler Handler { get; set; } 
-    public EnergiaClienteController()
+    private IEnergiaClienteHandler Handler { get; set; }
+    public EnergiaClienteController(IEnergiaClienteHandler _handler)
     {
-
+        Handler = _handler;
     }
 
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
@@ -29,7 +28,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetReadings")]
     public ActionResult<dbResponse<Reading>> GetReadings([FromQuery] GetReadingsRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetReadings(requestModel);
+        var result = Handler.GetReadings(requestModel);
 
         return ReturnResult(result);
     }
@@ -52,14 +51,14 @@ public class EnergiaClienteController : ControllerBase
                 }
             });
 
-        var readingResult = EnergiaClienteHandler.GetReadingByDate(new GetReadingByDateRequestModel()
+        var readingResult = Handler.GetReadingByDate(new GetReadingByDateRequestModel()
         {
             habitation = requestModel.habitation,
             month = month,
             year = year
         });
 
-        if (readingResult.Result != null)
+        if (readingResult.Result.Count > 0)
             return new BadRequestObjectResult(new dbResponse<decimal>()
             {
                 Status = new StatusObject()
@@ -70,7 +69,7 @@ public class EnergiaClienteController : ControllerBase
                 }
             });
 
-        var result = EnergiaClienteHandler.UploadNewReading(new Reading()
+        var result = Handler.UploadNewReading(new InsertReadingRequestModel()
         {
             Cheias = requestModel.cheias,
             Ponta = requestModel.ponta,
@@ -88,7 +87,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetReadingByDate")]
     public ActionResult<dbResponse<Reading>> GetReadingByDate([FromQuery] GetReadingByDateRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetReadingByDate(requestModel);
+        var result = Handler.GetReadingByDate(requestModel);
 
         return ReturnResult(result);
     }
@@ -96,7 +95,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetpreviousMonthReading")]
     public ActionResult<dbResponse<Reading>> GetpreviousMonthReading([FromQuery] GetReadingByDateRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetpreviousMonthReading(requestModel);
+        var result = Handler.GetpreviousMonthReading(requestModel);
 
         return ReturnResult(result);
     }
@@ -104,7 +103,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetInvoices")]
     public ActionResult<dbResponse<Invoice>> GetInvoices([FromQuery] GetInvoicesRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetInvoices(requestModel);
+        var result = Handler.GetInvoices(requestModel);
 
         return ReturnResult(result);
     }
@@ -112,7 +111,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetUnpaidTotal")]
     public ActionResult<dbResponse<decimal>> GetUnpaidTotal([FromQuery] GetUnpaidTotalRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetUnpaidTotal(requestModel);
+        var result = Handler.GetUnpaidTotal(requestModel);
 
         return ReturnResult(result);
     }
@@ -120,7 +119,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetUserDetails")]
     public ActionResult<dbResponse<User>> GetUserDetails([FromQuery] GetUserDetailsRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetUserDetails(requestModel);
+        var result = Handler.GetUserDetails(requestModel);
 
         return ReturnResult(result);
     }
@@ -128,7 +127,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetHolderDetails")]
     public ActionResult<dbResponse<Holder>> GetHolderDetails([FromQuery] GetHolderDetailsRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetHolderDetails(requestModel);
+        var result = Handler.GetHolderDetails(requestModel);
 
         return ReturnResult(result);
     }
@@ -136,7 +135,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "GetHabitationDetails")]
     public ActionResult<dbResponse<Habitation>> GetHabitationDetails([FromQuery] GetHabitationDetailsRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.GetHabitationDetails(requestModel);
+        var result = Handler.GetHabitationDetails(requestModel);
 
         return ReturnResult(result);
     }
@@ -144,7 +143,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHabitationPower")]
     public ActionResult<dbResponse<string>> UpdateHabitationPower([FromQuery] UpdateHabitationPowerRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHabitationPower(requestModel);
+        var result = Handler.UpdateHabitationPower(requestModel);
 
         return ReturnResult(result);
     }
@@ -152,7 +151,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHolderName")]
     public ActionResult<dbResponse<string>> UpdateHolderName([FromQuery] UpdateHolderNameRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHolderName(requestModel);
+        var result = Handler.UpdateHolderName(requestModel);
 
         return ReturnResult(result);
     }
@@ -160,7 +159,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHolderNif")]
     public ActionResult<dbResponse<string>> UpdateHolderNif([FromQuery] UpdateHolderNifRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHolderNif(requestModel);
+        var result = Handler.UpdateHolderNif(requestModel);
 
         return ReturnResult(result);
     }
@@ -168,7 +167,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHolderContact")]
     public ActionResult<dbResponse<string>> UpdateHolderContact([FromQuery] UpdateHolderContactRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHolderContact(requestModel);
+        var result = Handler.UpdateHolderContact(requestModel);
 
         return ReturnResult(result);
     }
@@ -176,7 +175,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHabitationTensionLevel")]
     public ActionResult<dbResponse<string>> UpdateHabitationTensionLevel([FromQuery] UpdateHabitationTensionLevelRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHabitationTensionLevel(requestModel);
+        var result = Handler.UpdateHabitationTensionLevel(requestModel);
 
         return ReturnResult(result);
     }
@@ -184,7 +183,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHabitationSchedule")]
     public ActionResult<dbResponse<string>> UpdateHabitationSchedule([FromQuery] UpdateHabitationScheduleRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHabitationSchedule(requestModel);
+        var result = Handler.UpdateHabitationSchedule(requestModel);
 
         return ReturnResult(result);
     }
@@ -192,7 +191,7 @@ public class EnergiaClienteController : ControllerBase
     [HttpGet(Name = "UpdateHabitationPhase")]
     public ActionResult<dbResponse<string>> UpdateHabitationPhase([FromQuery] UpdateHabitationPhaseRequestModel requestModel)
     {
-        var result = EnergiaClienteHandler.UpdateHabitationPhase(requestModel);
+        var result = Handler.UpdateHabitationPhase(requestModel);
 
         return ReturnResult(result);
     }

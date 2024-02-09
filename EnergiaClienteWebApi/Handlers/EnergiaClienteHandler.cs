@@ -1,32 +1,50 @@
 using System.Text;
 using EnergiaClienteWebApi.Domains;
-using EnergiaClienteWebApi.Databases;
 using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Databases.Interfaces;
+using EnergiaClienteWebApi.Handlers.Interfaces;
 
 namespace EnergiaClienteWebApi.Handlers;
 
-public static class EnergiaClienteHandler
+public class EnergiaClienteHandler : IEnergiaClienteHandler
 {
-    public static dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
+    private IEnergiaClienteDatabase Database { get; set; }
+
+    public EnergiaClienteHandler(IEnergiaClienteDatabase _database)
     {
-        return EnergiaClienteDatabase.GetReadings(requestModel);
+        Database = _database;
     }
 
-    public static dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel)
+    public dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
     {
-        return EnergiaClienteDatabase.GetReadingByDate(requestModel);
+        return Database.GetReadings(requestModel);
     }
 
-    public static dbResponse<decimal> UploadNewReading(Reading reading)
+    public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel)
     {
-        EnergiaClienteDatabase.InsertReading(reading);
+        return Database.GetReadingByDate(requestModel);
+    }
+
+    public dbResponse<decimal> UploadNewReading(InsertReadingRequestModel requestModel)
+    {
+        var response = Database.InsertReading(requestModel);
+
+        if (response.Status.Error)
+            return new dbResponse<decimal>() { Status = response.Status };
 
         var oldReadingResult = GetpreviousMonthReading(new GetReadingByDateRequestModel()
         {
-            habitation = reading.HabitationId,
-            month = reading.Month,
-            year = reading.Year
+            habitation = requestModel.HabitationId,
+            month = requestModel.Month,
+            year = requestModel.Year
         });
+
+        var reading = new Reading()
+        {
+            Ponta = requestModel.Ponta,
+            Cheias = requestModel.Cheias,
+            Vazio = requestModel.Vazio
+        };
 
         Reading oldReading = new Reading();
 
@@ -36,9 +54,9 @@ public static class EnergiaClienteHandler
         return new dbResponse<decimal>(CalculateAmount(reading, oldReading));
     }
 
-    public static dbResponse<Reading> GetpreviousMonthReading(GetReadingByDateRequestModel requestModel)
+    public dbResponse<Reading> GetpreviousMonthReading(GetReadingByDateRequestModel requestModel)
     {
-        return EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
+        return Database.GetReadingByDate(new GetReadingByDateRequestModel()
         {
             habitation = requestModel.habitation,
             month = requestModel.month > 1 ? requestModel.month - 1 : 12,
@@ -46,9 +64,98 @@ public static class EnergiaClienteHandler
         });
     }
 
-    private static Reading GenerateEstimatedReading(int habitation, int billingMonth, int billingYear, Reading lastMonth)
+    public dbResponse<string> Billing(BillingRequestModel requestModel)
     {
-        var realReadingsResult = EnergiaClienteDatabase.GetRealReadings(new GetReadingsRequestModel()
+        var startDate = new DateTime(requestModel.billingYear, requestModel.billingMonth, 9);
+        var endDate = startDate.AddMonths(1).AddDays(-1);
+        var limitDate = startDate.AddMonths(2).AddDays(3);
+
+        var amount = CalculateBillingAmount(requestModel.habitationId, requestModel.billingMonth, requestModel.billingYear);
+
+        byte[] document = Encoding.ASCII.GetBytes(""); // generate invoice pdf document
+
+        var request = new InsertInvoiceRequestModel()
+        {
+            number = "FAT-" + requestModel.habitationId + "DT" + requestModel.billingYear + "-" + requestModel.billingMonth,
+            habitation = requestModel.habitationId,
+            startDate = startDate,
+            endDate = endDate,
+            limitDate = limitDate,
+            value = amount,
+            document = document
+        };
+
+        return Database.InsertInvoice(request);
+    }
+
+    public dbResponse<int> GetHabitationIds()
+    {
+        return Database.GetHabitationIds();
+    }
+
+    public dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
+    {
+        return Database.GetInvoices(requestModel);
+    }
+
+    public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
+    {
+        return Database.GetUnpaidTotal(requestModel);
+    }
+
+    public dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
+    {
+        return Database.GetUserDetails(requestModel);
+    }
+
+    public dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
+    {
+        return Database.GetHolderDetails(requestModel);
+    }
+
+    public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
+    {
+        return Database.GetHabitationDetails(requestModel);
+    }
+
+    public dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
+    {
+        return Database.UpdateHabitationPower(requestModel);
+    }
+
+    public dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
+    {
+        return Database.UpdateHolderName(requestModel);
+    }
+
+    public dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
+    {
+        return Database.UpdateHolderNif(requestModel);
+    }
+
+    public dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
+    {
+        return Database.UpdateHolderContact(requestModel);
+    }
+
+    public dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
+    {
+        return Database.UpdateHabitationTensionLevel(requestModel);
+    }
+
+    public dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
+    {
+        return Database.UpdateHabitationSchedule(requestModel);
+    }
+
+    public dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
+    {
+        return Database.UpdateHabitationPhase(requestModel);
+    }
+
+    private Reading GenerateEstimatedReading(int habitation, int billingMonth, int billingYear, Reading lastMonth)
+    {
+        var realReadingsResult = Database.GetRealReadings(new GetReadingsRequestModel()
         {
             habitation = habitation,
             quantity = 6
@@ -72,7 +179,7 @@ public static class EnergiaClienteHandler
             vazioValues[i] = vazioDif / monthDif;
         }
 
-        Reading estimated = new()
+        InsertReadingRequestModel estimated = new()
         {
             Ponta = (int)Math.Round(pontaValues.Average(), 0) + lastMonth.Ponta,
             Cheias = (int)Math.Round(cheiasValues.Average(), 0) + lastMonth.Cheias,
@@ -84,14 +191,21 @@ public static class EnergiaClienteHandler
             ReadingDate = DateTime.Now
         };
 
-        EnergiaClienteDatabase.InsertReading(estimated);
+        Database.InsertReading(estimated);
 
-        return estimated;
+        var reading = new Reading()
+        {
+            Ponta = estimated.Ponta,
+            Cheias = estimated.Cheias,
+            Vazio = estimated.Vazio
+        };
+
+        return reading;
     }
 
-    private static decimal CalculateAmount(Reading reading, Reading oldReading)
+    private decimal CalculateAmount(Reading reading, Reading oldReading)
     {
-        var cost = EnergiaClienteDatabase.GetCostKwh();
+        var cost = Database.GetCostKwh();
 
         decimal amountponta = (reading.Ponta - oldReading.Ponta) * cost.costkwhPonta;
         decimal amountcheias = (reading.Cheias - oldReading.Cheias) * cost.costkwhCheias;
@@ -102,9 +216,9 @@ public static class EnergiaClienteHandler
         return amount;
     }
 
-    private static decimal CalculateBillingAmount(int habitation, int billingMonth, int billingYear)
+    private decimal CalculateBillingAmount(int habitation, int billingMonth, int billingYear)
     {
-        var readingResult = EnergiaClienteDatabase.GetReadingByDate(new GetReadingByDateRequestModel()
+        var readingResult = Database.GetReadingByDate(new GetReadingByDateRequestModel()
         {
             habitation = habitation,
             month = billingMonth,
@@ -125,101 +239,12 @@ public static class EnergiaClienteHandler
 
         Reading reading;
 
-        if (readingResult.Result == null)
+        if (readingResult.Result.Count == 0)
             reading = GenerateEstimatedReading(habitation, billingMonth, billingYear, oldReading);
         else
             reading = readingResult.Result[0];
 
         return CalculateAmount(reading, oldReading);
-    }
-
-    public static void Billing(int habitationId, int billingMonth, int billingYear)
-    {
-        var startDate = new DateTime(billingYear, billingMonth, 9);
-        var endDate = startDate.AddMonths(1).AddDays(-1);
-        var limitDate = startDate.AddMonths(2).AddDays(3);
-
-        var amount = CalculateBillingAmount(habitationId, billingMonth, billingYear);
-
-        byte[] document = Encoding.ASCII.GetBytes(""); // generate invoice pdf document
-
-        var request = new BillingRequestModel()
-        {
-            number = "FAT-" + habitationId + "DT" + billingYear + "-" + billingMonth,
-            habitation = habitationId,
-            startDate = startDate,
-            endDate = endDate,
-            limitDate = limitDate,
-            value = amount,
-            document = document
-        };
-
-        EnergiaClienteDatabase.Billing(request);
-    }
-
-    public static dbResponse<int> GetHabitationIds()
-    {
-        return EnergiaClienteDatabase.GetHabitationIds();
-    }
-
-    public static dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.GetInvoices(requestModel);
-    }
-
-    public static dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.GetUnpaidTotal(requestModel);
-    }
-
-    public static dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.GetUserDetails(requestModel);
-    }
-
-    public static dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.GetHolderDetails(requestModel);
-    }
-
-    public static dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.GetHabitationDetails(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHabitationPower(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHolderName(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHolderNif(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHolderContact(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHabitationTensionLevel(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHabitationSchedule(requestModel);
-    }
-
-    public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
-    {
-        return EnergiaClienteDatabase.UpdateHabitationPhase(requestModel);
     }
 
 }

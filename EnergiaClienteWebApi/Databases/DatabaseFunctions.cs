@@ -1,14 +1,15 @@
 using System.Data;
+using EnergiaClienteWebApi.Databases.Interfaces;
 using Microsoft.Data.SqlClient;
 
 namespace EnergiaClienteWebApi.Databases;
 
-public class DatabaseFunctions
+public class DatabaseFunctions : IDatabaseFunctions
 {
 
     private static SqlConnection connection = new SqlConnection("Data Source=192.168.1.8,1433;Initial Catalog=EnergiaClienteDados;User ID=sa;Password=1Secure*Password1;TrustServerCertificate=True");
 
-    private protected static DataRowCollection RunSelectProcedure(string procedure, List<SqlParameter> parameters)
+    public DataRowCollection RunSelectProcedure(string procedure, List<SqlParameter> parameters)
     {
         var dataAdapter = new SqlDataAdapter(procedure, connection);
         dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
@@ -19,7 +20,7 @@ public class DatabaseFunctions
         return dataSet.Tables[0].Rows;
     }
 
-    private protected static DataRowCollection RunSelectProcedure(string procedure)
+    public DataRowCollection RunSelectProcedure(string procedure)
     {
         var dataAdapter = new SqlDataAdapter(procedure, connection);
         dataAdapter.SelectCommand.CommandType = CommandType.StoredProcedure;
@@ -29,7 +30,7 @@ public class DatabaseFunctions
         return dataSet.Tables[0].Rows;
     }
 
-    private protected static bool RunInsertProcedure(string procedure, List<SqlParameter> parameters)
+    public bool RunInsertProcedure(string procedure, List<SqlParameter> parameters)
     {
         var command = new SqlCommand(procedure, connection)
         {
@@ -54,7 +55,7 @@ public class DatabaseFunctions
         }
     }
 
-    private protected static T? GetParam<T>(object value)
+    public T? GetParam<T>(object value)
     {
         object x = value != null ? value : "";
 

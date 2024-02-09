@@ -1,27 +1,33 @@
-
 using System.Data;
 using System.Text;
 using Microsoft.Data.SqlClient;
 using EnergiaClienteWebApi.Domains;
 using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Databases.Interfaces;
 
 namespace EnergiaClienteWebApi.Databases;
 
-public class EnergiaClienteDatabase : DatabaseFunctions
+public class EnergiaClienteDatabase : IEnergiaClienteDatabase
 {
+    public IDatabaseFunctions functions { get; set; }
 
-    private static CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m);
+    public EnergiaClienteDatabase(IDatabaseFunctions _functions)
+    {
+        functions = _functions;
+    }
 
-    public static CostKwh GetCostKwh()
+    private CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m);
+
+    public CostKwh GetCostKwh()
     {
         return costKwh;
     }
 
-    public static dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
+    public dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel)
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = RunSelectProcedure("UltimasFaturas", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("UltimasFaturas", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
             return new dbResponse<Invoice>() { Status = new StatusObject(404) };
@@ -31,13 +37,13 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         {
             var invoice = new Invoice
             {
-                Number = GetParam<string>(row["numero"]),
-                StartDate = GetParam<DateTime>(row["dataInicio"]),
-                EndDate = GetParam<DateTime>(row["dataFim"]),
-                Paid = GetParam<bool>(row["pago"]),
-                Value = GetParam<decimal>(row["valor"]),
-                LimitDate = GetParam<DateTime>(row["dataLimite"]),
-                HabitationId = GetParam<int>(row["idHabitacao"])
+                Number = functions.GetParam<string>(row["numero"]),
+                StartDate = functions.GetParam<DateTime>(row["dataInicio"]),
+                EndDate = functions.GetParam<DateTime>(row["dataFim"]),
+                Paid = functions.GetParam<bool>(row["pago"]),
+                Value = functions.GetParam<decimal>(row["valor"]),
+                LimitDate = functions.GetParam<DateTime>(row["dataLimite"]),
+                HabitationId = functions.GetParam<int>(row["idHabitacao"])
             };
             var documentString = row["documento"].ToString();
             invoice.Document = Encoding.ASCII.GetBytes(documentString != null ? documentString : "");
@@ -47,35 +53,32 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return new dbResponse<Invoice>(invoices);
     }
 
-    public static dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
+    public dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
     {
-        //set parameters
         var parameters = new List<SqlParameter>() {
                 new SqlParameter("habitacao", requestModel.habitation),
                 new SqlParameter("quantidade", requestModel.quantity)
             };
 
-        //execute stored procedure
-        var response = RunSelectProcedure("UltimasLeituras", parameters);
+        var response = functions.RunSelectProcedure("UltimasLeituras", parameters);
 
         if (response.Count == 0)
             return new dbResponse<Reading> { Status = new StatusObject(404) };
 
-        //mapping
         var readings = new List<Reading>();
         foreach (DataRow row in response)
         {
             var reading = new Reading
             {
-                Id = GetParam<int>(row["id"]),
-                Vazio = GetParam<int>(row["vazio"]),
-                Ponta = GetParam<int>(row["ponta"]),
-                Cheias = GetParam<int>(row["cheias"]),
-                Month = GetParam<int>(row["mes"]),
-                Year = GetParam<int>(row["ano"]),
-                ReadingDate = GetParam<DateTime>(row["dataLeitura"]),
-                HabitationId = GetParam<int>(row["idHabitacao"]),
-                Estimated = GetParam<bool>(row["estimada"])
+                Id = functions.GetParam<int>(row["id"]),
+                Vazio = functions.GetParam<int>(row["vazio"]),
+                Ponta = functions.GetParam<int>(row["ponta"]),
+                Cheias = functions.GetParam<int>(row["cheias"]),
+                Month = functions.GetParam<int>(row["mes"]),
+                Year = functions.GetParam<int>(row["ano"]),
+                ReadingDate = functions.GetParam<DateTime>(row["dataLeitura"]),
+                HabitationId = functions.GetParam<int>(row["idHabitacao"]),
+                Estimated = functions.GetParam<bool>(row["estimada"])
             };
 
             readings.Add(reading);
@@ -84,7 +87,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return new dbResponse<Reading>(readings);
     }
 
-    public static dbResponse<Reading> GetRealReadings(GetReadingsRequestModel requestModel)
+    public dbResponse<Reading> GetRealReadings(GetReadingsRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -92,7 +95,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("quantidade", requestModel.quantity)
             };
 
-        var response = RunSelectProcedure("UltimasLeiturasReais", parameters);
+        var response = functions.RunSelectProcedure("UltimasLeiturasReais", parameters);
 
         if (response.Count == 0)
             return new dbResponse<Reading> { Status = new StatusObject(404) };
@@ -102,15 +105,15 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         {
             var reading = new Reading
             {
-                Id = GetParam<int>(row["id"]),
-                Vazio = GetParam<int>(row["vazio"]),
-                Ponta = GetParam<int>(row["ponta"]),
-                Cheias = GetParam<int>(row["cheias"]),
-                Month = GetParam<int>(row["mes"]),
-                Year = GetParam<int>(row["ano"]),
-                ReadingDate = GetParam<DateTime>(row["dataLeitura"]),
-                HabitationId = GetParam<int>(row["idHabitacao"]),
-                Estimated = GetParam<bool>(row["estimada"])
+                Id = functions.GetParam<int>(row["id"]),
+                Vazio = functions.GetParam<int>(row["vazio"]),
+                Ponta = functions.GetParam<int>(row["ponta"]),
+                Cheias = functions.GetParam<int>(row["cheias"]),
+                Month = functions.GetParam<int>(row["mes"]),
+                Year = functions.GetParam<int>(row["ano"]),
+                ReadingDate = functions.GetParam<DateTime>(row["dataLeitura"]),
+                HabitationId = functions.GetParam<int>(row["idHabitacao"]),
+                Estimated = functions.GetParam<bool>(row["estimada"])
             };
 
             readings.Add(reading);
@@ -119,7 +122,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return new dbResponse<Reading>(readings);
     }
 
-    public static dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel)
+    public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>() {
                 new SqlParameter("habitacao", requestModel.habitation),
@@ -127,7 +130,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("ano", requestModel.year)
             };
 
-        var response = RunSelectProcedure("ReceberLeitura", parameters);
+        var response = functions.RunSelectProcedure("ReceberLeitura", parameters);
 
         if (response.Count == 0)
             return new dbResponse<Reading> { Status = new StatusObject(404) };
@@ -136,25 +139,25 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         var reading = new Reading
         {
-            Id = GetParam<int>(row["id"]),
-            Vazio = GetParam<int>(row["vazio"]),
-            Ponta = GetParam<int>(row["ponta"]),
-            Cheias = GetParam<int>(row["cheias"]),
-            Month = GetParam<int>(row["mes"]),
-            Year = GetParam<int>(row["ano"]),
-            ReadingDate = GetParam<DateTime>(row["dataLeitura"]),
-            HabitationId = GetParam<int>(row["idHabitacao"]),
-            Estimated = GetParam<bool>(row["estimada"])
+            Id = functions.GetParam<int>(row["id"]),
+            Vazio = functions.GetParam<int>(row["vazio"]),
+            Ponta = functions.GetParam<int>(row["ponta"]),
+            Cheias = functions.GetParam<int>(row["cheias"]),
+            Month = functions.GetParam<int>(row["mes"]),
+            Year = functions.GetParam<int>(row["ano"]),
+            ReadingDate = functions.GetParam<DateTime>(row["dataLeitura"]),
+            HabitationId = functions.GetParam<int>(row["idHabitacao"]),
+            Estimated = functions.GetParam<bool>(row["estimada"])
         };
 
         return new dbResponse<Reading>(reading);
     }
 
-    public static dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
+    public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel)
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = RunSelectProcedure("TotalPorPagar", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("TotalPorPagar", new List<SqlParameter>() { param });
         if (response.Count == 0)
             return new dbResponse<decimal> { Status = new StatusObject(404) };
 
@@ -162,26 +165,26 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         decimal value = 0;
 
-        value = GetParam<decimal>(row["Total"]);
+        value = functions.GetParam<decimal>(row["Total"]);
 
         return new dbResponse<decimal>(value);
     }
 
-    public static dbResponse<string> InsertReading(Reading model)
+    public dbResponse<string> InsertReading(InsertReadingRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
-                new SqlParameter("habitacao", model.HabitationId),
-                new SqlParameter("estimada", model.Estimated),
-                new SqlParameter("vazio", model.Vazio),
-                new SqlParameter("ponta", model.Ponta),
-                new SqlParameter("cheias", model.Cheias),
-                new SqlParameter("mes", model.Month),
-                new SqlParameter("ano", model.Year),
-                new SqlParameter("dataLeitura", model.ReadingDate),
+                new SqlParameter("habitacao", requestModel.HabitationId),
+                new SqlParameter("estimada", requestModel.Estimated),
+                new SqlParameter("vazio", requestModel.Vazio),
+                new SqlParameter("ponta", requestModel.Ponta),
+                new SqlParameter("cheias", requestModel.Cheias),
+                new SqlParameter("mes", requestModel.Month),
+                new SqlParameter("ano", requestModel.Year),
+                new SqlParameter("dataLeitura", requestModel.ReadingDate),
             };
 
-        var response = RunInsertProcedure("AdicionarLeitura", parameters);
+        var response = functions.RunInsertProcedure("AdicionarLeitura", parameters);
 
         var result = new dbResponse<string>();
 
@@ -195,7 +198,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> Billing(BillingRequestModel requestModel)
+    public dbResponse<string> InsertInvoice(InsertInvoiceRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -208,13 +211,15 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("documento", requestModel.document)
             };
 
-        var parameterValue = new SqlParameter("valor", SqlDbType.Decimal);//decimal is being stored as int - FIX THIS!
-        parameterValue.Value = requestModel.value;
-        parameterValue.Precision = 8;//this didnt work try something else...
-        parameterValue.Scale = 4;
+        var parameterValue = new SqlParameter("valor", SqlDbType.Decimal)
+        {
+            Value = requestModel.value,
+            Precision = 8,//this didnt work try something else...
+            Scale = 4
+        };//decimal is being stored as int - FIX THIS!
         parameters.Add(parameterValue);
 
-        var response = RunInsertProcedure("Faturacao", parameters);
+        var response = functions.RunInsertProcedure("Faturacao", parameters);
 
         var result = new dbResponse<string>();
 
@@ -228,11 +233,11 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
+    public dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel)
     {
         var param = new SqlParameter("email", requestModel.email);
 
-        var response = RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
             return new dbResponse<User> { Status = new StatusObject(404) };
@@ -241,21 +246,21 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         User user = new User()
         {
-            email = GetParam<string>(row["email"]),
-            contact = GetParam<string>(row["contacto"]),
-            fullName = GetParam<string>(row["nomeCompleto"]),
-            gender = GetParam<bool>(row["genero"]),
-            nif = GetParam<string>(row["nif"])
+            email = functions.GetParam<string>(row["email"]),
+            contact = functions.GetParam<string>(row["contacto"]),
+            fullName = functions.GetParam<string>(row["nomeCompleto"]),
+            gender = functions.GetParam<bool>(row["genero"]),
+            nif = functions.GetParam<string>(row["nif"])
         };
 
         return new dbResponse<User>(user);
     }
 
-    public static dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
+    public dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel)
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesUtilizador", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
             return new dbResponse<Holder> { Status = new StatusObject(404) };
@@ -264,20 +269,20 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         Holder holder = new Holder()
         {
-            HabitationId = GetParam<int>(row["idHabitacao"]),
-            contact = GetParam<string>(row["contacto"]),
-            fullName = GetParam<string>(row["nomeCompleto"]),
-            nif = GetParam<string>(row["nif"])
+            HabitationId = functions.GetParam<int>(row["idHabitacao"]),
+            contact = functions.GetParam<string>(row["contacto"]),
+            fullName = functions.GetParam<string>(row["nomeCompleto"]),
+            nif = functions.GetParam<string>(row["nif"])
         };
 
         return new dbResponse<Holder>(holder);
     }
 
-    public static dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
+    public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel)
     {
         var param = new SqlParameter("habitacao", requestModel.habitation);
 
-        var response = RunSelectProcedure("DetalhesHabitacao", new List<SqlParameter>() { param });
+        var response = functions.RunSelectProcedure("DetalhesHabitacao", new List<SqlParameter>() { param });
 
         if (response.Count == 0)
             return new dbResponse<Habitation> { Status = new StatusObject(404) };
@@ -286,11 +291,11 @@ public class EnergiaClienteDatabase : DatabaseFunctions
 
         Habitation habitation = new Habitation()
         {
-            userEmail = GetParam<string>(row["userEmail"]),
-            power = GetParam<decimal>(row["power"]),
-            phase = GetParam<string>(row["phase"]),
-            tensionLevel = GetParam<string>(row["tensionLevel"]),
-            schedule = GetParam<string>(row["schedule"])
+            userEmail = functions.GetParam<string>(row["userEmail"]),
+            power = functions.GetParam<decimal>(row["power"]),
+            phase = functions.GetParam<string>(row["phase"]),
+            tensionLevel = functions.GetParam<string>(row["tensionLevel"]),
+            schedule = functions.GetParam<string>(row["schedule"])
         };
 
         habitation.costKwh = GetCostKwh();
@@ -298,7 +303,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return new dbResponse<Habitation>(habitation);
     }
 
-    public static dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
+    public dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -306,7 +311,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("potencia", requestModel.power),
             };
 
-        var response = RunInsertProcedure("AlterarPotenciaHabitacao", parameters);
+        var response = functions.RunInsertProcedure("AlterarPotenciaHabitacao", parameters);
 
         var result = new dbResponse<string>();
 
@@ -320,7 +325,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
+    public dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -328,7 +333,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("nomeCompleto", requestModel.fullName),
             };
 
-        var response = RunInsertProcedure("AlterarNomeTitular", parameters);
+        var response = functions.RunInsertProcedure("AlterarNomeTitular", parameters);
 
         var result = new dbResponse<string>();
 
@@ -342,7 +347,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
+    public dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -350,7 +355,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("nif", requestModel.nif),
             };
 
-        var response = RunInsertProcedure("AlterarNifTitular", parameters);
+        var response = functions.RunInsertProcedure("AlterarNifTitular", parameters);
 
         var result = new dbResponse<string>();
 
@@ -364,7 +369,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
+    public dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -372,7 +377,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("contacto", requestModel.contact),
             };
 
-        var response = RunInsertProcedure("AlterarContactoTitular", parameters);
+        var response = functions.RunInsertProcedure("AlterarContactoTitular", parameters);
 
         var result = new dbResponse<string>();
 
@@ -386,7 +391,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
+    public dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -394,7 +399,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("nivelTensao", requestModel.tensionLevel),
             };
 
-        var response = RunInsertProcedure("AlterarNivelHabitacao", parameters);
+        var response = functions.RunInsertProcedure("AlterarNivelHabitacao", parameters);
 
         var result = new dbResponse<string>();
 
@@ -408,7 +413,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
+    public dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -416,7 +421,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("horario", requestModel.schedule),
             };
 
-        var response = RunInsertProcedure("AlterarHorarioHabitacao", parameters);
+        var response = functions.RunInsertProcedure("AlterarHorarioHabitacao", parameters);
 
         var result = new dbResponse<string>();
 
@@ -430,7 +435,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
+    public dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel)
     {
         var parameters = new List<SqlParameter>()
             {
@@ -438,7 +443,7 @@ public class EnergiaClienteDatabase : DatabaseFunctions
                 new SqlParameter("fase", requestModel.phase),
             };
 
-        var response = RunInsertProcedure("AlterarFaseHabitacao", parameters);
+        var response = functions.RunInsertProcedure("AlterarFaseHabitacao", parameters);
 
         var result = new dbResponse<string>();
 
@@ -452,9 +457,9 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         return result;
     }
 
-    public static dbResponse<int> GetHabitationIds()
+    public dbResponse<int> GetHabitationIds()
     {
-        var response = RunSelectProcedure("ListaIdHabitacao");
+        var response = functions.RunSelectProcedure("ListaIdHabitacao");
 
         if (response.Count == 0)
             return new dbResponse<int> { Status = new StatusObject(404) };
@@ -462,10 +467,9 @@ public class EnergiaClienteDatabase : DatabaseFunctions
         var ids = new List<int>();
         foreach (DataRow row in response)
         {
-            ids.Add(GetParam<int>(row["id"]));
+            ids.Add(functions.GetParam<int>(row["id"]));
         }
 
         return new dbResponse<int>(ids);
     }
-
 }
