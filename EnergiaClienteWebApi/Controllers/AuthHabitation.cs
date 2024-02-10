@@ -14,10 +14,17 @@ public class AuthHabitation : ActionFilterAttribute
     public override void OnActionExecuting(ActionExecutingContext filterContext)
     {
         var request = filterContext.HttpContext.Request;
-        var user = filterContext.HttpContext.User;
+        var identity = filterContext.HttpContext.User.Identity;
 
-        var identity = (ClaimsIdentity)user.Identity;
-        var email = identity.Name;
+        if (identity == null)
+        {
+            filterContext.Result = new StatusCodeResult(500);
+            base.OnActionExecuting(filterContext);
+            return;
+        }
+
+        var claim = (ClaimsIdentity)identity;
+        var email = claim.Name;
 
         var header = request.Headers.FirstOrDefault(h => h.Key.Equals("habitation"));
 

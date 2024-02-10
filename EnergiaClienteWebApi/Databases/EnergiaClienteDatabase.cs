@@ -270,9 +270,12 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
         if (response.Count == 0)
             return new dbResponse<bool> { Status = new StatusObject(500) };
 
-        var value = response[0]["success"];
+        var value = response[0]["success"].ToString();
 
-        return new dbResponse<bool>(bool.Parse(functions.GetParam<string>(value)));
+        if (string.IsNullOrEmpty(value))
+            return new dbResponse<bool> { Status = new StatusObject(500) };
+
+        return new dbResponse<bool>(bool.Parse(value));
     }
 
     public dbResponse<bool> AuthenticateUser(AuthenticateUserModel model)
@@ -288,9 +291,12 @@ public class EnergiaClienteDatabase : IEnergiaClienteDatabase
         if (response.Count == 0)
             return new dbResponse<bool> { Status = new StatusObject(500) };
 
-        var value = response[0]["success"];
+        var value = response[0]["success"].ToString();
 
-        return new dbResponse<bool>(bool.Parse(functions.GetParam<string>(value)));
+        if (string.IsNullOrEmpty(value))
+            return new dbResponse<bool> { Status = new StatusObject(500) };
+
+        return new dbResponse<bool>(bool.Parse(value));
     }
 
     public dbResponse<Holder> GetHolderDetails(GetHolderDetailsModel model)

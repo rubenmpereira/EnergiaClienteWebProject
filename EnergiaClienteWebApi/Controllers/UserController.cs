@@ -18,7 +18,17 @@ public class UserController : ControllerBase
     {
         Handler = _handler;
     }
+    private string Email()
+    {
+        if (User.Identity == null)
+            throw new Exception(); //define exeption
 
+        var identity = (ClaimsIdentity)User.Identity;
+        if (string.IsNullOrEmpty(identity.Name))
+            throw new Exception(); //define exeption
+
+        return identity.Name;
+    }
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
     {
         var code = result.Status.StatusCode;
@@ -36,12 +46,9 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUserDetails")]
     public ActionResult<dbResponse<User>> GetUserDetails()
     {
-        var identity = (ClaimsIdentity)User.Identity;
-        var email = identity.Name;
-
         var result = Handler.GetUserDetails(new GetUserDetailsModel()
         {
-            email = email
+            email = Email()
         });
 
         return ReturnResult(result);
