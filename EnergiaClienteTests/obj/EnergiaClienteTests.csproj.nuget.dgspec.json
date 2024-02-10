@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj": {}
+    "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj": {
+    "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
+        "projectUniqueName": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
         "projectName": "EnergiaClienteTests",
-        "projectPath": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
+        "projectPath": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\EnergiaClienteTests.csproj",
         "packagesPath": "C:\\Users\\ruben\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\obj\\",
+        "outputPath": "c:\\Projects\\EnergiaClienteWebProject\\EnergiaClienteTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

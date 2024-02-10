@@ -1,28 +1,30 @@
 using EnergiaClienteWebApi.Domains;
-using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Models.EnergiaCliente;
+using EnergiaClienteWebApi.Models.User;
 
 namespace EnergiaClienteWebApi.Databases.Interfaces;
 
 public interface IEnergiaClienteDatabase
 {
     public CostKwh GetCostKwh();
-    public dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel);
-    public dbResponse<Invoice> GetInvoices(GetInvoicesRequestModel requestModel);
-    public dbResponse<Reading> GetRealReadings(GetReadingsRequestModel requestModel);
-    public dbResponse<Reading> GetReadingByDate(GetReadingByDateRequestModel requestModel);
-    public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalRequestModel requestModel);
-    public dbResponse<string> InsertReading(InsertReadingRequestModel requestModel);
-    public dbResponse<string> InsertInvoice(InsertInvoiceRequestModel requestModel);
-    public dbResponse<User> GetUserDetails(GetUserDetailsRequestModel requestModel);
-    public dbResponse<Holder> GetHolderDetails(GetHolderDetailsRequestModel requestModel);
-    public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsRequestModel requestModel);
-    public dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerRequestModel requestModel);
-    public dbResponse<string> UpdateHolderName(UpdateHolderNameRequestModel requestModel);
-    public dbResponse<string> UpdateHolderNif(UpdateHolderNifRequestModel requestModel);
-    public dbResponse<string> UpdateHolderContact(UpdateHolderContactRequestModel requestModel);
-    public dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelRequestModel requestModel);
-    public dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleRequestModel requestModel);
-    public dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseRequestModel requestModel);
+    public dbResponse<Reading> GetReadings(GetReadingsModel model);
+    public dbResponse<Invoice> GetInvoices(GetInvoicesModel model);
+    public dbResponse<Reading> GetRealReadings(GetReadingsModel model);
+    public dbResponse<Reading> GetReadingByDate(GetReadingByDateModel model);
+    public dbResponse<decimal> GetUnpaidTotal(GetUnpaidTotalModel model);
+    public dbResponse<string> InsertReading(InsertReadingModel model);
+    public dbResponse<string> InsertInvoice(InsertInvoiceModel model);
+    public dbResponse<User> GetUserDetails(GetUserDetailsModel model);
+    public dbResponse<Holder> GetHolderDetails(GetHolderDetailsModel model);
+    public dbResponse<Habitation> GetHabitationDetails(GetHabitationDetailsModel model);
+    public dbResponse<string> UpdateHabitationPower(UpdateHabitationPowerModel model);
+    public dbResponse<string> UpdateHolderName(UpdateHolderNameModel model);
+    public dbResponse<string> UpdateHolderNif(UpdateHolderNifModel model);
+    public dbResponse<string> UpdateHolderContact(UpdateHolderContactModel model);
+    public dbResponse<string> UpdateHabitationTensionLevel(UpdateHabitationTensionLevelModel model);
+    public dbResponse<string> UpdateHabitationSchedule(UpdateHabitationScheduleModel model);
+    public dbResponse<string> UpdateHabitationPhase(UpdateHabitationPhaseModel model);
     public dbResponse<int> GetHabitationIds();
-
+    public dbResponse<bool> AutherizeHabitation(AutherizeHabitationModel model);
+    public dbResponse<bool> AuthenticateUser(AuthenticateUserModel model);
 }

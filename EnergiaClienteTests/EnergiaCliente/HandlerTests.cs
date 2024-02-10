@@ -1,8 +1,9 @@
 using EnergiaClienteWebApi.Databases.Interfaces;
-using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Models;
 using EnergiaClienteWebApi.Domains;
 using Moq;
 using EnergiaClienteWebApi.Handlers;
+using EnergiaClienteWebApi.Models.EnergiaCliente;
 
 namespace EnergiaClienteTests.EnergiaCliente;
 
@@ -13,14 +14,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetReadings(It.IsAny<GetReadingsRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadings(It.IsAny<GetReadingsModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Id = 1 }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetReadings(new GetReadingsRequestModel());
+        var response = handler.GetReadings(new GetReadingsModel());
 
-        mockDatabase.Verify(database => database.GetReadings(It.IsAny<GetReadingsRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadings(It.IsAny<GetReadingsModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -32,14 +33,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Id = 1 }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetReadingByDate(new GetReadingByDateRequestModel());
+        var response = handler.GetReadingByDate(new GetReadingByDateModel());
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -53,14 +54,14 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingRequestModel>()))
+        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var request = new InsertReadingRequestModel
+        var request = new InsertReadingModel
         {
             Ponta = 20,
             Cheias = 20,
@@ -74,7 +75,7 @@ public class HandlerTests
 
         var response = handler.UploadNewReading(request);
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
         mockDatabase.Verify(database => database.InsertReading(request), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -89,14 +90,14 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingRequestModel>()))
+        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var request = new InsertReadingRequestModel
+        var request = new InsertReadingModel
         {
             Ponta = 20,
             Cheias = 20,
@@ -110,7 +111,7 @@ public class HandlerTests
 
         var response = handler.UploadNewReading(request);
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
         mockDatabase.Verify(database => database.InsertReading(request), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -125,16 +126,16 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingRequestModel>()))
+        mockDatabase.Setup(database => database.InsertReading(It.IsAny<InsertReadingModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UploadNewReading(new InsertReadingRequestModel());
+        var response = handler.UploadNewReading(new InsertReadingModel());
 
-        mockDatabase.Verify(database => database.InsertReading(It.IsAny<InsertReadingRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.InsertReading(It.IsAny<InsertReadingModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -144,14 +145,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Id = 1 }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetpreviousMonthReading(new GetReadingByDateRequestModel() { month = 10, year = 2020, habitation = 1 });
+        var response = handler.GetpreviousMonthReading(new GetReadingByDateModel() { month = 10, year = 2020, habitation = 1 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -163,14 +164,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Id = 1 }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetpreviousMonthReading(new GetReadingByDateRequestModel() { month = 1, year = 2020, habitation = 1 });
+        var response = handler.GetpreviousMonthReading(new GetReadingByDateModel() { month = 1, year = 2020, habitation = 1 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 12 && x.year == 2019)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 12 && x.year == 2019)), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -184,20 +185,20 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 20, Cheias = 20, Vazio = 20 }));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()))
+        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.Billing(new BillingRequestModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
+        var response = handler.Billing(new BillingModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)), Times.Once);
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
-        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -209,23 +210,23 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetRealReadings(It.IsAny<GetReadingsRequestModel>()))
+        mockDatabase.Setup(database => database.GetRealReadings(It.IsAny<GetReadingsModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 20, Cheias = 20, Vazio = 20, HabitationId = 1, Month = 10, Year = 2020 }));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>());
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()))
+        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.Billing(new BillingRequestModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
+        var response = handler.Billing(new BillingModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)), Times.Once);
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
-        mockDatabase.Verify(database => database.GetRealReadings(It.IsAny<GetReadingsRequestModel>()), Times.Once);
-        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.GetRealReadings(It.IsAny<GetReadingsModel>()), Times.Once);
+        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -237,20 +238,20 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 20, Cheias = 20, Vazio = 20 }));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)))
         .Returns(new dbResponse<Reading>());
-        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()))
+        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.Billing(new BillingRequestModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
+        var response = handler.Billing(new BillingModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)), Times.Once);
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
-        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -262,23 +263,23 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetRealReadings(It.IsAny<GetReadingsRequestModel>()))
+        mockDatabase.Setup(database => database.GetRealReadings(It.IsAny<GetReadingsModel>()))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 0, Cheias = 0, Vazio = 0, HabitationId = 1, Month = 10, Year = 2020 }));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>());
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)))
         .Returns(new dbResponse<Reading>());
-        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()))
+        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.Billing(new BillingRequestModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
+        var response = handler.Billing(new BillingModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)), Times.Once);
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
-        mockDatabase.Verify(database => database.GetRealReadings(It.IsAny<GetReadingsRequestModel>()), Times.Once);
-        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.GetRealReadings(It.IsAny<GetReadingsModel>()), Times.Once);
+        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -290,20 +291,20 @@ public class HandlerTests
 
         mockDatabase.Setup(database => database.GetCostKwh())
         .Returns(new CostKwh(0.24m, 0.1741m, 0.1072m));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 20, Cheias = 20, Vazio = 20 }));
-        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)))
+        mockDatabase.Setup(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)))
         .Returns(new dbResponse<Reading>(new Reading() { Ponta = 10, Cheias = 10, Vazio = 10 }));
-        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()))
+        mockDatabase.Setup(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.Billing(new BillingRequestModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
+        var response = handler.Billing(new BillingModel() { habitationId = 1, billingMonth = 10, billingYear = 2020 });
 
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 10)), Times.Once);
-        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateRequestModel>(x => x.month == 9)), Times.Once);
-        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 10)), Times.Once);
+        mockDatabase.Verify(database => database.GetReadingByDate(It.Is<GetReadingByDateModel>(x => x.month == 9)), Times.Once);
+        mockDatabase.Verify(database => database.InsertInvoice(It.IsAny<InsertInvoiceModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -332,14 +333,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetInvoices(It.IsAny<GetInvoicesRequestModel>()))
+        mockDatabase.Setup(database => database.GetInvoices(It.IsAny<GetInvoicesModel>()))
         .Returns(new dbResponse<Invoice>(new Invoice() { Number = "FAT102DT2020-10" }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetInvoices(new GetInvoicesRequestModel());
+        var response = handler.GetInvoices(new GetInvoicesModel());
 
-        mockDatabase.Verify(database => database.GetInvoices(It.IsAny<GetInvoicesRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetInvoices(It.IsAny<GetInvoicesModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -351,14 +352,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetUnpaidTotal(It.IsAny<GetUnpaidTotalRequestModel>()))
+        mockDatabase.Setup(database => database.GetUnpaidTotal(It.IsAny<GetUnpaidTotalModel>()))
         .Returns(new dbResponse<decimal>(120.5m));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetUnpaidTotal(new GetUnpaidTotalRequestModel());
+        var response = handler.GetUnpaidTotal(new GetUnpaidTotalModel());
 
-        mockDatabase.Verify(database => database.GetUnpaidTotal(It.IsAny<GetUnpaidTotalRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetUnpaidTotal(It.IsAny<GetUnpaidTotalModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -370,14 +371,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetUserDetails(It.IsAny<GetUserDetailsRequestModel>()))
+        mockDatabase.Setup(database => database.GetUserDetails(It.IsAny<GetUserDetailsModel>()))
         .Returns(new dbResponse<User>(new User() { email = "exemple@email.com" }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetUserDetails(new GetUserDetailsRequestModel());
+        var response = handler.GetUserDetails(new GetUserDetailsModel());
 
-        mockDatabase.Verify(database => database.GetUserDetails(It.IsAny<GetUserDetailsRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetUserDetails(It.IsAny<GetUserDetailsModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -389,14 +390,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetHolderDetails(It.IsAny<GetHolderDetailsRequestModel>()))
+        mockDatabase.Setup(database => database.GetHolderDetails(It.IsAny<GetHolderDetailsModel>()))
         .Returns(new dbResponse<Holder>(new Holder() { HabitationId = 1 }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetHolderDetails(new GetHolderDetailsRequestModel());
+        var response = handler.GetHolderDetails(new GetHolderDetailsModel());
 
-        mockDatabase.Verify(database => database.GetHolderDetails(It.IsAny<GetHolderDetailsRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetHolderDetails(It.IsAny<GetHolderDetailsModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -408,14 +409,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.GetHabitationDetails(It.IsAny<GetHabitationDetailsRequestModel>()))
+        mockDatabase.Setup(database => database.GetHabitationDetails(It.IsAny<GetHabitationDetailsModel>()))
         .Returns(new dbResponse<Habitation>(new Habitation() { userEmail = "exemple@email.com" }));
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.GetHabitationDetails(new GetHabitationDetailsRequestModel());
+        var response = handler.GetHabitationDetails(new GetHabitationDetailsModel());
 
-        mockDatabase.Verify(database => database.GetHabitationDetails(It.IsAny<GetHabitationDetailsRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.GetHabitationDetails(It.IsAny<GetHabitationDetailsModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
         Assert.True(response.Result != null);
@@ -427,14 +428,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationPower(new UpdateHabitationPowerRequestModel());
+        var response = handler.UpdateHabitationPower(new UpdateHabitationPowerModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -444,14 +445,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationPower(new UpdateHabitationPowerRequestModel());
+        var response = handler.UpdateHabitationPower(new UpdateHabitationPowerModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -461,14 +462,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderName(new UpdateHolderNameRequestModel());
+        var response = handler.UpdateHolderName(new UpdateHolderNameModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -478,14 +479,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderName(new UpdateHolderNameRequestModel());
+        var response = handler.UpdateHolderName(new UpdateHolderNameModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -495,14 +496,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderNif(new UpdateHolderNifRequestModel());
+        var response = handler.UpdateHolderNif(new UpdateHolderNifModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -512,14 +513,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderNif(new UpdateHolderNifRequestModel());
+        var response = handler.UpdateHolderNif(new UpdateHolderNifModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -529,14 +530,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderContact(new UpdateHolderContactRequestModel());
+        var response = handler.UpdateHolderContact(new UpdateHolderContactModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -546,14 +547,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHolderContact(new UpdateHolderContactRequestModel());
+        var response = handler.UpdateHolderContact(new UpdateHolderContactModel());
 
-        mockDatabase.Verify(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHolderContact(It.IsAny<UpdateHolderContactModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -563,14 +564,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelRequestModel());
+        var response = handler.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -580,14 +581,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelRequestModel());
+        var response = handler.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -597,14 +598,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationSchedule(new UpdateHabitationScheduleRequestModel());
+        var response = handler.UpdateHabitationSchedule(new UpdateHabitationScheduleModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -614,14 +615,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationSchedule(new UpdateHabitationScheduleRequestModel());
+        var response = handler.UpdateHabitationSchedule(new UpdateHabitationScheduleModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
@@ -631,14 +632,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()))
         .Returns(new dbResponse<string>());
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationPhase(new UpdateHabitationPhaseRequestModel());
+        var response = handler.UpdateHabitationPhase(new UpdateHabitationPhaseModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()), Times.Once);
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
     }
@@ -648,14 +649,14 @@ public class HandlerTests
     {
         var mockDatabase = new Mock<IEnergiaClienteDatabase>();
 
-        mockDatabase.Setup(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()))
+        mockDatabase.Setup(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()))
         .Returns(new dbResponse<string>() { Status = new StatusObject(500) });
 
         var handler = new EnergiaClienteHandler(mockDatabase.Object);
 
-        var response = handler.UpdateHabitationPhase(new UpdateHabitationPhaseRequestModel());
+        var response = handler.UpdateHabitationPhase(new UpdateHabitationPhaseModel());
 
-        mockDatabase.Verify(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()), Times.Once);
+        mockDatabase.Verify(database => database.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()), Times.Once);
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
     }
