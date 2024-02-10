@@ -7,29 +7,206 @@
 	},
 	"item": [
 		{
-			"name": "GetUserDetails",
+			"name": "GetUserDetails Bruno",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenbruno}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/GetUserDetails?email=brunoaveiro@gmail.com",
+					"raw": "{{urlbase}}/User/GetUserDetails",
 					"host": [
-						"{{url}}"
+						"{{urlbase}}"
 					],
 					"path": [
+						"User",
 						"GetUserDetails"
-					],
-					"query": [
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserDetails Juliana",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
 						{
-							"key": "email",
-							"value": "brunoaveiro@gmail.com"
+							"key": "token",
+							"value": "{{tokenjuliana}}",
+							"type": "string"
 						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{urlbase}}/User/GetUserDetails",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"GetUserDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserDetails no token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{urlbase}}/User/GetUserDetails",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"GetUserDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Juliana",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code==200){\r",
+							"    let responseData = pm.response.json();\r",
+							"    pm.environment.set(\"tokenjuliana\", responseData.accessToken);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"julianavita@gmail.com\",\r\n  \"password\": \"passe123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlbase}}/User/Auth",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"Auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Bruno",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code==200){\r",
+							"    let responseData = pm.response.json();\r",
+							"    pm.environment.set(\"tokenbruno\", responseData.accessToken);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"brunoaveiro@gmail.com\",\r\n  \"password\": \"passesecreta\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlbase}}/User/Auth",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"Auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"fakeemail@gmail.com\",\r\n  \"password\": \"fakepassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{urlbase}}/User/Auth",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"Auth"
 					]
 				}
 			},
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "inherit"
+	},
 	"event": [
 		{
 			"listen": "prerequest",

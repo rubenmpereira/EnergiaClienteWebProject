@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "ce5890c4-a27a-431b-83e5-23defa40d603",
+		"name": "Forbidden",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetReadings Forbidden",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetReadings?quantity=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadings"
+					],
+					"query": [
+						{
+							"key": "quantity",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{tokenbruno}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 403\",function(){",
+					"    pm.expect(pm.response.code).to.eql(403);",
+					"});"
+				]
+			}
+		}
+	]
+}

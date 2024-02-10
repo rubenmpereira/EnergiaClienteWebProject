@@ -1,0 +1,61 @@
+{
+	"info": {
+		"_postman_id": "662913ee-4a53-472b-b721-4167e51710cd",
+		"name": "Unautherized",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetReadings Unautherized",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetReadings?quantity=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadings"
+					],
+					"query": [
+						{
+							"key": "quantity",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 401\",function(){",
+					"    pm.expect(pm.response.code).to.eql(401);",
+					"});"
+				]
+			}
+		}
+	]
+}

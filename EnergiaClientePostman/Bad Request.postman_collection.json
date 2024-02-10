@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "f8162d27-fe92-4f08-918f-84d0b0ddf7b6",
+		"name": "Bad Request",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetReadings Bad Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/GetReadings?quantity=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadings"
+					],
+					"query": [
+						{
+							"key": "quantity",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{tokenbruno}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 400\",function(){",
+					"    pm.expect(pm.response.code).to.eql(400);",
+					"});"
+				]
+			}
+		}
+	]
+}

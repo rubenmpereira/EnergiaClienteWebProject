@@ -1,11 +1,12 @@
 using EnergiaClienteWebApi.Databases;
 using EnergiaClienteWebApi.Databases.Interfaces;
-using EnergiaClienteWebApi.RequestModels;
+using EnergiaClienteWebApi.Models;
 using Moq;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.ComponentModel;
 using EnergiaClienteWebApi.Domains;
+using EnergiaClienteWebApi.Models.EnergiaCliente;
 
 namespace EnergiaClienteTests.EnergiaCliente;
 
@@ -49,7 +50,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetReadings(new GetReadingsRequestModel());
+        var response = database.GetReadings(new GetReadingsModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -69,7 +70,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetReadings(new GetReadingsRequestModel());
+        var response = database.GetReadings(new GetReadingsModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -112,7 +113,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetInvoices(new GetInvoicesRequestModel());
+        var response = database.GetInvoices(new GetInvoicesModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -132,7 +133,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetInvoices(new GetInvoicesRequestModel());
+        var response = database.GetInvoices(new GetInvoicesModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -177,7 +178,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetRealReadings(new GetReadingsRequestModel());
+        var response = database.GetRealReadings(new GetReadingsModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -197,7 +198,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetRealReadings(new GetReadingsRequestModel());
+        var response = database.GetRealReadings(new GetReadingsModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -226,7 +227,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetUnpaidTotal(new GetUnpaidTotalRequestModel());
+        var response = database.GetUnpaidTotal(new GetUnpaidTotalModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -246,7 +247,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetUnpaidTotal(new GetUnpaidTotalRequestModel());
+        var response = database.GetUnpaidTotal(new GetUnpaidTotalModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -264,7 +265,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertReading(new InsertReadingRequestModel());
+        var response = database.InsertReading(new InsertReadingModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -280,7 +281,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertReading(new InsertReadingRequestModel());
+        var response = database.InsertReading(new InsertReadingModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -298,7 +299,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertInvoice(new InsertInvoiceRequestModel());
+        var response = database.InsertInvoice(new InsertInvoiceModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -314,7 +315,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.InsertInvoice(new InsertInvoiceRequestModel());
+        var response = database.InsertInvoice(new InsertInvoiceModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -351,7 +352,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetUserDetails(new GetUserDetailsRequestModel());
+        var response = database.GetUserDetails(new GetUserDetailsModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -371,7 +372,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetUserDetails(new GetUserDetailsRequestModel());
+        var response = database.GetUserDetails(new GetUserDetailsModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -406,7 +407,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetHolderDetails(new GetHolderDetailsRequestModel());
+        var response = database.GetHolderDetails(new GetHolderDetailsModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -426,7 +427,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetHolderDetails(new GetHolderDetailsRequestModel());
+        var response = database.GetHolderDetails(new GetHolderDetailsModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -463,7 +464,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetHabitationDetails(new GetHabitationDetailsRequestModel());
+        var response = database.GetHabitationDetails(new GetHabitationDetailsModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -483,7 +484,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.GetHabitationDetails(new GetHabitationDetailsRequestModel());
+        var response = database.GetHabitationDetails(new GetHabitationDetailsModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(404, response.Status.StatusCode);
@@ -501,7 +502,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationPower(new UpdateHabitationPowerRequestModel());
+        var response = database.UpdateHabitationPower(new UpdateHabitationPowerModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -517,7 +518,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationPower(new UpdateHabitationPowerRequestModel());
+        var response = database.UpdateHabitationPower(new UpdateHabitationPowerModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -535,7 +536,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderName(new UpdateHolderNameRequestModel());
+        var response = database.UpdateHolderName(new UpdateHolderNameModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -551,7 +552,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderName(new UpdateHolderNameRequestModel());
+        var response = database.UpdateHolderName(new UpdateHolderNameModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -569,7 +570,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderNif(new UpdateHolderNifRequestModel());
+        var response = database.UpdateHolderNif(new UpdateHolderNifModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -585,7 +586,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderNif(new UpdateHolderNifRequestModel());
+        var response = database.UpdateHolderNif(new UpdateHolderNifModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -603,7 +604,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderContact(new UpdateHolderContactRequestModel());
+        var response = database.UpdateHolderContact(new UpdateHolderContactModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -619,7 +620,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHolderContact(new UpdateHolderContactRequestModel());
+        var response = database.UpdateHolderContact(new UpdateHolderContactModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -637,7 +638,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelRequestModel());
+        var response = database.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -653,7 +654,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelRequestModel());
+        var response = database.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -671,7 +672,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationSchedule(new UpdateHabitationScheduleRequestModel());
+        var response = database.UpdateHabitationSchedule(new UpdateHabitationScheduleModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -687,7 +688,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationSchedule(new UpdateHabitationScheduleRequestModel());
+        var response = database.UpdateHabitationSchedule(new UpdateHabitationScheduleModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);
@@ -705,7 +706,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationPhase(new UpdateHabitationPhaseRequestModel());
+        var response = database.UpdateHabitationPhase(new UpdateHabitationPhaseModel());
 
         Assert.False(response.Status.Error);
         Assert.Equal(200, response.Status.StatusCode);
@@ -721,7 +722,7 @@ public class DatabaseTests
 
         var database = new EnergiaClienteDatabase(mockDatabaseFunctions.Object);
 
-        var response = database.UpdateHabitationPhase(new UpdateHabitationPhaseRequestModel());
+        var response = database.UpdateHabitationPhase(new UpdateHabitationPhaseModel());
 
         Assert.True(response.Status.Error);
         Assert.Equal(500, response.Status.StatusCode);

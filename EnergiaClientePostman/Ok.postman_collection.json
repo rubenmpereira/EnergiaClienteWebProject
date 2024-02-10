@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "23c0c86d-fc7b-446d-a7d6-57cdbc7f36d5",
+		"name": "Ok",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32553097"
+	},
+	"item": [
+		{
+			"name": "GetReadingByDate",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetReadingByDate?month=10&year=2023",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadingByDate"
+					],
+					"query": [
+						{
+							"key": "month",
+							"value": "10"
+						},
+						{
+							"key": "year",
+							"value": "2023"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetpreviousMonthReading",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetpreviousMonthReading?month=10&year=2023",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetpreviousMonthReading"
+					],
+					"query": [
+						{
+							"key": "month",
+							"value": "10"
+						},
+						{
+							"key": "year",
+							"value": "2023"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadNewReading",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UploadNewReading?ponta=100&cheias=100&vazio=100",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UploadNewReading"
+					],
+					"query": [
+						{
+							"key": "ponta",
+							"value": "100"
+						},
+						{
+							"key": "cheias",
+							"value": "100"
+						},
+						{
+							"key": "vazio",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetReadings",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetReadings?quantity=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadings"
+					],
+					"query": [
+						{
+							"key": "quantity",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetInvoices",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetInvoices",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetInvoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUnpaidTotal",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetUnpaidTotal",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetUnpaidTotal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetHolderDetails",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetHolderDetails",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetHolderDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderName",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderName?fullName=Bruno Gulherme Frenandes Agustinho Aveiro",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderName"
+					],
+					"query": [
+						{
+							"key": "fullName",
+							"value": "Bruno Gulherme Frenandes Agustinho Aveiro"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderNif",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderNif?nif=276574483",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderNif"
+					],
+					"query": [
+						{
+							"key": "nif",
+							"value": "276574483"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderContact",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderContact?contact=912256337",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderContact"
+					],
+					"query": [
+						{
+							"key": "contact",
+							"value": "912256337"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetHabitationDetails",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetHabitationDetails",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetHabitationDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationPower",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationPower?power=9.3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationPower"
+					],
+					"query": [
+						{
+							"key": "power",
+							"value": "9.3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationTensionLevel",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationTensionLevel?tensionLevel=medio",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationTensionLevel"
+					],
+					"query": [
+						{
+							"key": "tensionLevel",
+							"value": "medio"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationSchedule",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationSchedule?schedule=complexo",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationSchedule"
+					],
+					"query": [
+						{
+							"key": "schedule",
+							"value": "complexo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationPhase",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationPhase?phase=bifasico",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationPhase"
+					],
+					"query": [
+						{
+							"key": "phase",
+							"value": "bifasico"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{tokenbruno}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\",function(){",
+					"    pm.expect(pm.response.code).to.eql(200);",
+					"});"
+				]
+			}
+		}
+	]
+}
