@@ -46,7 +46,7 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUserDetails")]
     public ActionResult<dbResponse<User>> GetUserDetails()
     {
-        var result = Handler.GetUserDetails(new GetUserDetailsModel()
+        var result = Handler.GetUserDetails(new GetUserDetailsRequestModel()
         {
             email = Email()
         });
@@ -57,11 +57,13 @@ public class UserController : ControllerBase
     [HttpPost(Name = "Auth")]
     public IResult Auth([FromBody] AuthRequestModel requestModel)
     {
-        var result = Handler.AuthenticateUser(new AuthenticateUserModel()
-        {
-            email = requestModel.email,
-            password = requestModel.password
-        });
+        if (string.IsNullOrEmpty(requestModel.email))
+            return Results.BadRequest();
+
+        if (string.IsNullOrEmpty(requestModel.password))
+            return Results.BadRequest();
+
+        var result = Handler.AuthenticateUser(requestModel);
 
         if (result.Result[0] == false)
             return Results.Unauthorized();

@@ -443,20 +443,20 @@ public class DatabaseTests
         DataTable table = new DataTable();
         DataColumn[] columns =
         [
-            new DataColumn("userEmail", typeof(string)),
-            new DataColumn("power", typeof(decimal)),
-            new DataColumn("phase", typeof(string)),
-            new DataColumn("tensionLevel", typeof(string)),
-            new DataColumn("schedule", typeof(string)),
+            new DataColumn("emailUtilizador", typeof(string)),
+            new DataColumn("potencia", typeof(decimal)),
+            new DataColumn("fase", typeof(string)),
+            new DataColumn("nivelTensao", typeof(string)),
+            new DataColumn("horario", typeof(string)),
         ];
         table.Columns.AddRange(columns);
 
         var row = table.NewRow();
-        row["userEmail"] = "exemple@email.com";
-        row["power"] = 6.7m;
-        row["phase"] = "mono";
-        row["tensionLevel"] = "baixo";
-        row["schedule"] = "simples";
+        row["emailUtilizador"] = "exemple@email.com";
+        row["potencia"] = 6.7m;
+        row["fase"] = "mono";
+        row["nivelTensao"] = "baixo";
+        row["horario"] = "simples";
         table.Rows.Add(table.NewRow());
 
         mockDatabaseFunctions.Setup(functions => functions.RunSelectProcedure(It.IsAny<string>(), It.IsAny<List<SqlParameter>>()))
