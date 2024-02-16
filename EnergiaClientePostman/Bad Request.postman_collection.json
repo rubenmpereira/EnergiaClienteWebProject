@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "GetReadings Bad Request",
+			"name": "GetReadings",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -24,6 +24,242 @@
 							"key": "quantity",
 							"value": "10"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetReadingByDate Bad Request",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetReadingByDate",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetReadingByDate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetpreviousMonthReading Bad Request",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetpreviousMonthReading",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetpreviousMonthReading"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadNewReading Bad Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UploadNewReading",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UploadNewReading"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderName Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderName",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderName"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderNif Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderNif?niff=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderNif"
+					],
+					"query": [
+						{
+							"key": "niff",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHolderContact Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHolderContact",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHolderContact"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationPower Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationPower",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationPower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationTensionLevel Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationTensionLevel",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationTensionLevel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationSchedule Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationSchedule",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationSchedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHabitationPhase Bad Request",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/UpdateHabitationPhase",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"UpdateHabitationPhase"
 					]
 				}
 			},

@@ -7,6 +7,34 @@
 	},
 	"item": [
 		{
+			"name": "GetUserDetails",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{urlbase}}/User/GetUserDetails",
+					"host": [
+						"{{urlbase}}"
+					],
+					"path": [
+						"User",
+						"GetUserDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetUserDetails Bruno",
 			"request": {
 				"auth": {
@@ -84,7 +112,7 @@
 			"response": []
 		},
 		{
-			"name": "Auth Juliana",
+			"name": "Auth Bruno",
 			"event": [
 				{
 					"listen": "test",
@@ -92,7 +120,8 @@
 						"exec": [
 							"if(pm.response.code==200){\r",
 							"    let responseData = pm.response.json();\r",
-							"    pm.environment.set(\"tokenjuliana\", responseData.accessToken);\r",
+							"    pm.environment.set(\"tokenbruno\", responseData.accessToken);\r",
+							"    pm.environment.set(\"token\", responseData.accessToken);\r",
 							"}"
 						],
 						"type": "text/javascript"
@@ -104,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"julianavita@gmail.com\",\r\n  \"password\": \"passe123\"\r\n}",
+					"raw": "{\r\n  \"email\": \"brunoaveiro@gmail.com\",\r\n  \"password\": \"passesecreta\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -125,7 +154,7 @@
 			"response": []
 		},
 		{
-			"name": "Auth Bruno",
+			"name": "Auth Juliana",
 			"event": [
 				{
 					"listen": "test",
@@ -133,7 +162,8 @@
 						"exec": [
 							"if(pm.response.code==200){\r",
 							"    let responseData = pm.response.json();\r",
-							"    pm.environment.set(\"tokenbruno\", responseData.accessToken);\r",
+							"    pm.environment.set(\"tokenjuliana\", responseData.accessToken);\r",
+							"    pm.environment.set(\"token\", responseData.accessToken);\r",
 							"}"
 						],
 						"type": "text/javascript"
@@ -145,7 +175,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"brunoaveiro@gmail.com\",\r\n  \"password\": \"passesecreta\"\r\n}",
+					"raw": "{\r\n  \"email\": \"julianavita@gmail.com\",\r\n  \"password\": \"passe123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

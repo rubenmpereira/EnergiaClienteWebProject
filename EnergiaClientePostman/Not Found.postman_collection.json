@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "GetReadingByDate",
+			"name": "GetReadingByDate Not Found",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -38,6 +38,39 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GetpreviousMonthReading Not Found",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "habitation",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/GetpreviousMonthReading?month=11&year=2026",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"GetpreviousMonthReading"
+					],
+					"query": [
+						{
+							"key": "month",
+							"value": "11"
+						},
+						{
+							"key": "year",
+							"value": "2026"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -45,7 +78,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "{{tokenbruno}}",
+				"value": "{{token}}",
 				"type": "string"
 			}
 		]
