@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnergiaClienteTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46c79882b40842795649f6f3c10791322fccb54b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fce77507b0ab1b98e0f8708280f1db24c9f9de93")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnergiaClienteTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnergiaClienteTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

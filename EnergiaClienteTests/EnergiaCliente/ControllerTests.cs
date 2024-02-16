@@ -1,10 +1,11 @@
-using EnergiaClienteWebApi.RequestModels;
 using EnergiaClienteWebApi.Domains;
 using Moq;
 using EnergiaClienteWebApi.Handlers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using EnergiaClienteWebApi.RequestModels.EnergiaCliente;
-using EnergiaClienteWebApi.Models.EnergiaCliente;
+using EnergiaClienteWebApi.RequestModels.User;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace EnergiaClienteTests.EnergiaCliente;
 
@@ -16,66 +17,29 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetReadings(It.IsAny<GetReadingsModel>()))
+        mockHandler.Setup(handler => handler.GetReadings(It.IsAny<GetReadingsRequestModel>()))
         .Returns(new dbResponse<Reading>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetReadings(new GetReadingsRequestModel());
 
-        mockHandler.Verify(mock => mock.GetReadings(It.IsAny<GetReadingsModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetReadings(It.IsAny<GetReadingsRequestModel>()), Times.Once);
     }
 
     [Fact]
     public void UploadNewReadingCallsHandler()
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
-        //var mockDatetime = new Mock<DateTime>();
 
-        mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
-        .Returns(new dbResponse<Reading>());
-        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<InsertReadingModel>()))
+        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<UploadNewReadingRequestModel>()))
         .Returns(new dbResponse<decimal>(10m));
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UploadNewReading(new UploadNewReadingRequestModel());
 
-        if (DateTime.Now.Day >= 5 && DateTime.Now.Day <= 7)
-        {
-            mockHandler.Verify(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
-            mockHandler.Verify(handler => handler.UploadNewReading(It.IsAny<InsertReadingModel>()), Times.Once);
-        }
-        else
-        {
-        Assert.NotNull(response);
-        Assert.NotNull(response.Result);
-        Assert.Equal(typeof(BadRequestObjectResult), response.Result.GetType());
-        }
-    }
-
-    [Fact]
-    public void UploadNewReadingAlreadyUploaded()
-    {
-        var mockHandler = new Mock<IEnergiaClienteHandler>();
-
-        mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
-        .Returns(new dbResponse<Reading>(new Reading() { Ponta = 1, Cheias = 1, Vazio = 1 }));
-        mockHandler.Setup(handler => handler.UploadNewReading(It.IsAny<InsertReadingModel>()));
-
-        var controller = new EnergiaClienteController(mockHandler.Object);
-
-        var response = controller.UploadNewReading(new UploadNewReadingRequestModel());
-
-        if (DateTime.Now.Day >= 5 && DateTime.Now.Day <= 7)
-        {
-            mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
-            mockHandler.Verify(mock => mock.UploadNewReading(It.IsAny<InsertReadingModel>()), Times.Never);
-        }
-
-        Assert.NotNull(response);
-        Assert.NotNull(response.Result);
-        Assert.Equal(typeof(BadRequestObjectResult), response.Result.GetType());
+        mockHandler.Verify(handler => handler.UploadNewReading(It.IsAny<UploadNewReadingRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -83,14 +47,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateModel>()))
+        mockHandler.Setup(handler => handler.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()))
         .Returns(new dbResponse<Reading>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetReadingByDate(new GetReadingByDateRequestModel());
 
-        mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetReadingByDate(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -98,14 +62,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetpreviousMonthReading(It.IsAny<GetReadingByDateModel>()))
+        mockHandler.Setup(handler => handler.GetpreviousMonthReading(It.IsAny<GetReadingByDateRequestModel>()))
         .Returns(new dbResponse<Reading>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetpreviousMonthReading(new GetReadingByDateRequestModel());
 
-        mockHandler.Verify(mock => mock.GetpreviousMonthReading(It.IsAny<GetReadingByDateModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetpreviousMonthReading(It.IsAny<GetReadingByDateRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -113,14 +77,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetInvoices(It.IsAny<GetInvoicesModel>()))
+        mockHandler.Setup(handler => handler.GetInvoices())
         .Returns(new dbResponse<Invoice>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetInvoices();
 
-        mockHandler.Verify(mock => mock.GetInvoices(It.IsAny<GetInvoicesModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetInvoices(), Times.Once);
     }
 
     [Fact]
@@ -128,29 +92,36 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetUnpaidTotal(It.IsAny<GetUnpaidTotalModel>()))
+        mockHandler.Setup(handler => handler.GetUnpaidTotal())
         .Returns(new dbResponse<decimal>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetUnpaidTotal();
 
-        mockHandler.Verify(mock => mock.GetUnpaidTotal(It.IsAny<GetUnpaidTotalModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetUnpaidTotal(), Times.Once);
     }
 
     [Fact]
     public void GetUserDetailsCallsHandler()
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
+        var mockIdentity = Mock.Of<ClaimsIdentity>(ci => ci.Name == "email@gmail.com");
+        var mockPrincipal = Mock.Of<ClaimsPrincipal>(p => p.Identity == mockIdentity);
+        var mockhttp = Mock.Of<HttpContext>(cc => cc.User == mockPrincipal);
+        var mockContext = Mock.Of<ControllerContext>(cc => cc.HttpContext == mockhttp);
 
-        mockHandler.Setup(handler => handler.GetUserDetails(It.IsAny<GetUserDetailsModel>()))
+        mockHandler.Setup(handler => handler.GetUserDetails(It.IsAny<GetUserDetailsRequestModel>()))
         .Returns(new dbResponse<User>());
 
-        var controller = new EnergiaClienteController(mockHandler.Object);
+        var controller = new UserController(mockHandler.Object)
+        {
+            ControllerContext = mockContext
+        };
 
-        //var response = controller.GetUserDetails(new GetUserDetailsRequestModel());
+        var response = controller.GetUserDetails();
 
-        mockHandler.Verify(mock => mock.GetUserDetails(It.IsAny<GetUserDetailsModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetUserDetails(It.Is<GetUserDetailsRequestModel>(model => model.email == "email@gmail.com")), Times.Once);
     }
 
     [Fact]
@@ -158,14 +129,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetHolderDetails(It.IsAny<GetHolderDetailsModel>()))
+        mockHandler.Setup(handler => handler.GetHolderDetails())
         .Returns(new dbResponse<Holder>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetHolderDetails();
 
-        mockHandler.Verify(mock => mock.GetHolderDetails(It.IsAny<GetHolderDetailsModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetHolderDetails(), Times.Once);
     }
 
     [Fact]
@@ -173,14 +144,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.GetHabitationDetails(It.IsAny<GetHabitationDetailsModel>()))
+        mockHandler.Setup(handler => handler.GetHabitationDetails())
         .Returns(new dbResponse<Habitation>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.GetHabitationDetails();
 
-        mockHandler.Verify(mock => mock.GetHabitationDetails(It.IsAny<GetHabitationDetailsModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.GetHabitationDetails(), Times.Once);
     }
 
     [Fact]
@@ -188,14 +159,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()))
+        mockHandler.Setup(handler => handler.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHabitationPower(new UpdateHabitationPowerRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHabitationPower(It.IsAny<UpdateHabitationPowerRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -203,14 +174,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()))
+        mockHandler.Setup(handler => handler.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHolderName(new UpdateHolderNameRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHolderName(It.IsAny<UpdateHolderNameModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHolderName(It.IsAny<UpdateHolderNameRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -218,14 +189,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()))
+        mockHandler.Setup(handler => handler.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHolderNif(new UpdateHolderNifRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHolderNif(It.IsAny<UpdateHolderNifModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHolderNif(It.IsAny<UpdateHolderNifRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -233,14 +204,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()))
+        mockHandler.Setup(handler => handler.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHabitationTensionLevel(new UpdateHabitationTensionLevelRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHabitationTensionLevel(It.IsAny<UpdateHabitationTensionLevelRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -248,14 +219,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()))
+        mockHandler.Setup(handler => handler.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHabitationSchedule(new UpdateHabitationScheduleRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHabitationSchedule(It.IsAny<UpdateHabitationScheduleRequestModel>()), Times.Once);
     }
 
     [Fact]
@@ -263,14 +234,14 @@ public class ControllerTests
     {
         var mockHandler = new Mock<IEnergiaClienteHandler>();
 
-        mockHandler.Setup(handler => handler.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()))
+        mockHandler.Setup(handler => handler.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()))
         .Returns(new dbResponse<string>());
 
         var controller = new EnergiaClienteController(mockHandler.Object);
 
         var response = controller.UpdateHabitationPhase(new UpdateHabitationPhaseRequestModel());
 
-        mockHandler.Verify(mock => mock.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseModel>()), Times.Once);
+        mockHandler.Verify(mock => mock.UpdateHabitationPhase(It.IsAny<UpdateHabitationPhaseRequestModel>()), Times.Once);
     }
 
 }

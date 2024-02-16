@@ -18,7 +18,17 @@ public class UserController : ControllerBase
     {
         Handler = _handler;
     }
+    private string Email()
+    {
+        if (User.Identity == null)
+            throw new Exception(); //define exeption
 
+        var identity = (ClaimsIdentity)User.Identity;
+        if (string.IsNullOrEmpty(identity.Name))
+            throw new Exception(); //define exeption
+
+        return identity.Name;
+    }
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
     {
         var code = result.Status.StatusCode;
@@ -36,12 +46,9 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUserDetails")]
     public ActionResult<dbResponse<User>> GetUserDetails()
     {
-        var identity = (ClaimsIdentity)User.Identity;
-        var email = identity.Name;
-
-        var result = Handler.GetUserDetails(new GetUserDetailsModel()
+        var result = Handler.GetUserDetails(new GetUserDetailsRequestModel()
         {
-            email = email
+            email = Email()
         });
 
         return ReturnResult(result);
@@ -50,11 +57,13 @@ public class UserController : ControllerBase
     [HttpPost(Name = "Auth")]
     public IResult Auth([FromBody] AuthRequestModel requestModel)
     {
-        var result = Handler.AuthenticateUser(new AuthenticateUserModel()
-        {
-            email = requestModel.email,
-            password = requestModel.password
-        });
+        if (string.IsNullOrEmpty(requestModel.email))
+            return Results.BadRequest();
+
+        if (string.IsNullOrEmpty(requestModel.password))
+            return Results.BadRequest();
+
+        var result = Handler.AuthenticateUser(requestModel);
 
         if (result.Result[0] == false)
             return Results.Unauthorized();
