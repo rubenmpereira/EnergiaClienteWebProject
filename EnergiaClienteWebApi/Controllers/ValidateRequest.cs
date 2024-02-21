@@ -15,7 +15,7 @@ public class Validate : ActionFilterAttribute
         var queryKeys = context.HttpContext.Request.Query.Keys;
         var missing = requestModel.GetType().GetProperties().Where(p => !queryKeys.Contains(p.Name));
 
-        if (missing.Count() > 0)
+        if (missing.Any())
         {
             context.Result = new BadRequestObjectResult(new dbResponse<string>()
             {

@@ -1,23 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using EnergiaClienteWebApi.Domains;
-using EnergiaClienteWebApi.Models;
 using EnergiaClienteWebApi.Handlers.Interfaces;
-using EnergiaClienteWebApi.Models.EnergiaCliente;
 using EnergiaClienteWebApi.RequestModels.User;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
-using EnergiaClienteWebApi.Models.User;
 
 
 [Route("[controller]/[action]")]
-public class UserController : ControllerBase
+public class UserController(IEnergiaClienteHandler _handler) : ControllerBase
 {
-    private IEnergiaClienteHandler Handler { get; set; }
-    public UserController(IEnergiaClienteHandler _handler)
-    {
-        Handler = _handler;
-    }
+    private readonly IEnergiaClienteHandler Handler = _handler;
+
     private string Email()
     {
         if (User.Identity == null)
