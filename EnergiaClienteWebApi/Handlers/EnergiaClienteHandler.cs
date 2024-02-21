@@ -9,16 +9,11 @@ using EnergiaClienteWebApi.Models.User;
 
 namespace EnergiaClienteWebApi.Handlers;
 
-public class EnergiaClienteHandler : IEnergiaClienteHandler
+public class EnergiaClienteHandler(IEnergiaClienteDatabase _database) : IEnergiaClienteHandler
 {
-    private IEnergiaClienteDatabase Database { get; set; }
+    private readonly IEnergiaClienteDatabase Database = _database;
 
     public int habitation { get; set; }
-
-    public EnergiaClienteHandler(IEnergiaClienteDatabase _database)
-    {
-        Database = _database;
-    }
 
     public dbResponse<Reading> GetReadings(GetReadingsRequestModel requestModel)
     {

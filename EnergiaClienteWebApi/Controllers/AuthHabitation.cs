@@ -5,13 +5,10 @@ using EnergiaClienteWebApi.Models.User;
 using Microsoft.AspNetCore.Mvc.Filters;
 using EnergiaClienteWebApi.Domains;
 
-public class AuthHabitation : ActionFilterAttribute
+public class AuthHabitation(IEnergiaClienteHandler _handler) : ActionFilterAttribute
 {
-    private IEnergiaClienteHandler Handler { get; set; }
-    public AuthHabitation(IEnergiaClienteHandler _handler)
-    {
-        Handler = _handler;
-    }
+    private readonly IEnergiaClienteHandler Handler = _handler;
+
     public override void OnActionExecuting(ActionExecutingContext filterContext)
     {
         var request = filterContext.HttpContext.Request;

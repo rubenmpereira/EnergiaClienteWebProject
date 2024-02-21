@@ -8,14 +8,9 @@ using EnergiaClienteWebApi.Models.User;
 
 namespace EnergiaClienteWebApi.Databases;
 
-public class EnergiaClienteDatabase : IEnergiaClienteDatabase
+public class EnergiaClienteDatabase(IDatabaseFunctions _functions) : IEnergiaClienteDatabase
 {
-    public IDatabaseFunctions functions { get; set; }
-
-    public EnergiaClienteDatabase(IDatabaseFunctions _functions)
-    {
-        functions = _functions;
-    }
+    public readonly IDatabaseFunctions functions = _functions;
 
     private CostKwh costKwh => new CostKwh(0.24m, 0.1741m, 0.1072m);
 

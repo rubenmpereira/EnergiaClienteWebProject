@@ -3,6 +3,7 @@ using EnergiaClienteWebApi.Domains;
 using EnergiaClienteWebApi.RequestModels.EnergiaCliente;
 using EnergiaClienteWebApi.Handlers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 [Authorize]
 [TypeFilter(typeof(AuthHabitation))]
@@ -10,10 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 [Route("[controller]/[action]")]
 public class EnergiaClienteController : ControllerBase
 {
-    private IEnergiaClienteHandler Handler { get; set; }
-    public EnergiaClienteController(IEnergiaClienteHandler _handler)
+    private readonly IEnergiaClienteHandler Handler;
+    private readonly IMemoryCache cache;
+    public EnergiaClienteController(IEnergiaClienteHandler _handler, IMemoryCache _cache)
     {
         Handler = _handler;
+        cache = _cache;
     }
 
     public ActionResult<dbResponse<T>> ReturnResult<T>(dbResponse<T> result)
@@ -29,6 +32,7 @@ public class EnergiaClienteController : ControllerBase
         };
     }
 
+    [TypeFilter(typeof(CachedRequest))]
     [HttpGet(Name = "GetReadings")]
     public ActionResult<dbResponse<Reading>> GetReadings([FromQuery] GetReadingsRequestModel requestModel)
     {
@@ -53,6 +57,7 @@ public class EnergiaClienteController : ControllerBase
         return ReturnResult(Handler.GetpreviousMonthReading(requestModel));
     }
 
+    [TypeFilter(typeof(CachedRequest))]
     [HttpGet(Name = "GetInvoices")]
     public ActionResult<dbResponse<Invoice>> GetInvoices()
     {
